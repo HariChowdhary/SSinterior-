@@ -35,6 +35,40 @@
             margin-bottom: 2.5rem; /* Equivalent to mb-10 */
             text-align: center;
         }
+        /* Styling for the modal overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Above everything else */
+        }
+        .modal-content {
+            background-color: #1a1a1a;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            width: 400px;
+            color: #facc15;
+            position: relative;
+            animation: fadeInScale 0.3s ease-out;
+        }
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -197,29 +231,13 @@
             </div>
         </section>
 
-        <!-- Admin Panel (Login or Photo Management) -->
-        <section id="admin-panel" class="py-16 md:py-24 bg-gray-800 rounded-lg mx-4 md:mx-auto max-w-7xl mt-8 px-6 md:px-12 hidden">
+        <!-- Admin Dashboard (Visible after login) -->
+        <section id="admin-dashboard" class="py-16 md:py-24 bg-gray-800 rounded-lg mx-4 md:mx-auto max-w-7xl mt-8 px-6 md:px-12 hidden">
             <div class="container mx-auto">
-                <h2 class="section-heading text-yellow-400">Admin Area</h2>
-                <div id="admin-login-form" class="max-w-md mx-auto bg-gray-900 p-8 rounded-xl shadow-lg hidden">
-                    <p class="text-gray-300 text-center mb-6">Admin Login</p>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="adminUsername" class="block text-lg font-medium text-gray-300 mb-2">Username</label>
-                            <input type="text" id="adminUsername" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
-                        </div>
-                        <div>
-                            <label for="adminPassword" class="block text-lg font-medium text-gray-300 mb-2">Password</label>
-                            <input type="password" id="adminPassword" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
-                        </div>
-                        <button id="admin-login-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
-                            Login
-                        </button>
-                    </div>
-                    <p id="login-message" class="text-center mt-4 text-sm text-red-400"></p>
-                </div>
+                <h2 class="section-heading text-yellow-400">Admin Dashboard</h2>
 
-                <div id="admin-photo-management" class="max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg hidden">
+                <!-- Photo Management Form -->
+                <div class="max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10">
                     <p class="text-gray-300 text-center mb-6">Add New Portfolio Images (URL based only)</p>
                     <div class="space-y-4">
                         <div>
@@ -240,6 +258,23 @@
                     </div>
                     <p id="admin-message" class="text-center mt-4 text-sm text-red-400"></p>
                 </div>
+
+                <!-- Admin OTP Contact Change Form -->
+                <div class="max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Update Admin OTP Contact</h3>
+                    <p class="text-gray-300 text-center mb-6 text-sm">This updates the contact (phone or email) for simulated OTP login.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="newAdminContact" class="block text-lg font-medium text-gray-300 mb-2">New Admin Phone/Email</label>
+                            <input type="text" id="newAdminContact" placeholder="e.g., +91 9876543210 or newemail@example.com" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        </div>
+                        <button id="update-admin-contact-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Update OTP Contact
+                        </button>
+                    </div>
+                    <p id="otp-contact-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
             </div>
         </section>
 
@@ -353,10 +388,58 @@
         </div>
     </footer>
 
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal-button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            <h2 class="text-3xl font-bold text-yellow-400 mb-6 text-center">Admin Login</h2>
+
+            <!-- Login Form -->
+            <div id="login-form-container" class="space-y-6">
+                <div>
+                    <label for="loginIdentifier" class="block text-lg font-medium text-gray-300 mb-2">Username/Email/Phone</label>
+                    <input type="text" id="loginIdentifier" placeholder="87220 58888 or ssenterprises666666@gmail.com" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                </div>
+                <div id="password-field">
+                    <label for="loginPassword" class="block text-lg font-medium text-gray-300 mb-2">Password</label>
+                    <input type="password" id="loginPassword" placeholder="RAJU@$1234" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                </div>
+                <button id="login-password-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                    Login with Password
+                </button>
+                <div class="text-center text-gray-400 my-4">OR</div>
+                <button id="send-otp-button" class="w-full bg-indigo-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-indigo-700 transition duration-300">
+                    Send OTP
+                </button>
+
+                <!-- OTP Verification Field (Initially Hidden) -->
+                <div id="otp-verification-field" class="hidden mt-4 space-y-4">
+                    <p class="text-red-400 text-sm text-center">**SIMULATION: OTP is displayed here, not sent. For real OTP, a backend is needed.**</p>
+                    <p id="simulated-otp-display" class="text-yellow-400 font-bold text-xl text-center mb-4"></p>
+                    <div>
+                        <label for="otpInput" class="block text-lg font-medium text-gray-300 mb-2">Enter OTP</label>
+                        <input type="text" id="otpInput" placeholder="Enter the 6-digit OTP" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                    </div>
+                    <button id="verify-otp-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                        Verify OTP
+                    </button>
+                </div>
+            </div>
+            <p id="login-modal-message" class="text-center mt-4 text-sm text-red-400"></p>
+        </div>
+    </div>
+
+
     <script>
         // --- Admin Credentials (Hardcoded - INSECURE for production) ---
-        const ADMIN_USERNAME = '9963364015';
-        const ADMIN_PASSWORD = 'Hari@$1811'; // Replace with a stronger password for local testing if you wish
+        // For password login:
+        const ADMIN_USERNAME_PASS = 'ssenterprises666666@gmail.com'; // Or '87220 58888'
+        const ADMIN_PASSWORD_PASS = 'RAJU@$1234';
+
+        // For simulated OTP login:
+        // Load initial admin OTP contact from localStorage, or use default
+        let adminOtpContact = localStorage.getItem('adminOtpContact') || '+91 87220 58888';
+        const SIMULATED_OTP = '123456'; // This OTP will be "sent" (displayed)
 
         // Array to store portfolio items
         let portfolioItems = [
@@ -400,94 +483,185 @@
             });
         }
 
-        // Admin functionality
+        // Admin authentication and UI elements
         let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Check localStorage for login status
 
         const adminToggleButton = document.getElementById('admin-toggle-button');
         const mobileAdminToggleButton = document.getElementById('mobile-admin-toggle-button');
-        const adminPanel = document.getElementById('admin-panel');
-        const adminLoginForm = document.getElementById('admin-login-form');
-        const adminPhotoManagement = document.getElementById('admin-photo-management');
-        const adminLoginButton = document.getElementById('admin-login-button');
-        const adminUsernameInput = document.getElementById('adminUsername');
-        const adminPasswordInput = document.getElementById('adminPassword');
-        const loginMessage = document.getElementById('login-message');
+        const adminDashboard = document.getElementById('admin-dashboard'); // This is the new dashboard
+        const adminLoginModal = document.getElementById('admin-login-modal');
+        const closeModalButton = document.getElementById('close-modal-button');
 
+        // Login form elements
+        const loginFormContainer = document.getElementById('login-form-container');
+        const loginIdentifierInput = document.getElementById('loginIdentifier');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const loginPasswordButton = document.getElementById('login-password-button');
+        const sendOtpButton = document.getElementById('send-otp-button');
+        const otpVerificationField = document.getElementById('otp-verification-field');
+        const simulatedOtpDisplay = document.getElementById('simulated-otp-display');
+        const otpInput = document.getElementById('otpInput');
+        const verifyOtpButton = document.getElementById('verify-otp-button');
+        const loginModalMessage = document.getElementById('login-modal-message');
+
+        // Photo management elements
         const addPhotoButton = document.getElementById('add-photo-button');
         const imageUrlInput = document.getElementById('imageUrl');
         const imageTitleInput = document.getElementById('imageTitle');
         const imageDescriptionInput = document.getElementById('imageDescription');
         const adminMessage = document.getElementById('admin-message');
 
-        function updateAdminUI() {
+        // OTP contact update elements
+        const newAdminContactInput = document.getElementById('newAdminContact');
+        const updateAdminContactButton = document.getElementById('update-admin-contact-button');
+        const otpContactMessage = document.getElementById('otp-contact-message');
+
+
+        function updateMainAdminButton() {
             if (isLoggedIn) {
                 adminToggleButton.textContent = 'Admin Logout';
                 mobileAdminToggleButton.textContent = 'Admin Logout';
-                adminPanel.classList.remove('hidden');
-                adminLoginForm.classList.add('hidden');
-                adminPhotoManagement.classList.remove('hidden');
             } else {
                 adminToggleButton.textContent = 'Admin Login';
                 mobileAdminToggleButton.textContent = 'Admin Login';
-                adminPanel.classList.remove('hidden'); // Show panel container
-                adminLoginForm.classList.remove('hidden'); // Show login form
-                adminPhotoManagement.classList.add('hidden'); // Hide photo management
             }
         }
 
+        function updateAdminDashboardVisibility() {
+            if (isLoggedIn) {
+                adminDashboard.classList.remove('hidden');
+                newAdminContactInput.value = adminOtpContact; // Pre-fill current OTP contact
+            } else {
+                adminDashboard.classList.add('hidden');
+            }
+        }
+
+        // Show login modal when admin button is clicked
         adminToggleButton.addEventListener('click', () => {
             if (isLoggedIn) {
+                // If already logged in, clicking the button logs out
                 isLoggedIn = false;
-                localStorage.setItem('isLoggedIn', 'false'); // Clear login state
-                adminMessage.textContent = ''; // Clear photo add message
-                loginMessage.textContent = 'Logged out successfully.'; // Provide logout feedback
-                loginMessage.classList.remove('text-red-400');
-                loginMessage.classList.add('text-green-400');
+                localStorage.setItem('isLoggedIn', 'false');
+                updateMainAdminButton();
+                updateAdminDashboardVisibility(); // Hide dashboard
+                loginModalMessage.textContent = 'Logged out successfully.'; // Provide feedback
+                loginModalMessage.classList.remove('text-red-400', 'text-green-400'); // Clear previous color
+                loginModalMessage.classList.add('text-green-400'); // Set success color
+                // No need to show modal on logout
             } else {
-                loginMessage.textContent = ''; // Clear previous login messages
-                // If not logged in, clicking the button reveals the panel and login form
-            }
-            updateAdminUI();
-            if (mobileMenu.classList.contains('hidden')) { // Close mobile menu if desktop button clicked
-                 mobileMenu.classList.add('hidden');
+                // If not logged in, show the modal for login
+                adminLoginModal.classList.remove('hidden');
+                loginModalMessage.textContent = ''; // Clear previous messages
+                // Reset OTP fields if they were open from a previous attempt
+                otpVerificationField.classList.add('hidden');
+                simulatedOtpDisplay.textContent = '';
+                otpInput.value = '';
+                loginIdentifierInput.value = '';
+                loginPasswordInput.value = '';
             }
         });
 
         mobileAdminToggleButton.addEventListener('click', () => {
             if (isLoggedIn) {
                 isLoggedIn = false;
-                localStorage.setItem('isLoggedIn', 'false'); // Clear login state
-                adminMessage.textContent = ''; // Clear photo add message
-                loginMessage.textContent = 'Logged out successfully.'; // Provide logout feedback
-                loginMessage.classList.remove('text-red-400');
-                loginMessage.classList.add('text-green-400');
+                localStorage.setItem('isLoggedIn', 'false');
+                updateMainAdminButton();
+                updateAdminDashboardVisibility(); // Hide dashboard
+                loginModalMessage.textContent = 'Logged out successfully.';
+                loginModalMessage.classList.remove('text-red-400', 'text-green-400');
+                loginModalMessage.classList.add('text-green-400');
             } else {
-                loginMessage.textContent = ''; // Clear previous login messages
+                adminLoginModal.classList.remove('hidden');
+                loginModalMessage.textContent = '';
+                otpVerificationField.classList.add('hidden');
+                simulatedOtpDisplay.textContent = '';
+                otpInput.value = '';
+                loginIdentifierInput.value = '';
+                loginPasswordInput.value = '';
             }
-            updateAdminUI();
             mobileMenu.classList.add('hidden'); // Close mobile menu after toggle
         });
 
-        adminLoginButton.addEventListener('click', () => {
-            const username = adminUsernameInput.value.trim();
-            const password = adminPasswordInput.value.trim();
+        closeModalButton.addEventListener('click', () => {
+            adminLoginModal.classList.add('hidden');
+            loginModalMessage.textContent = ''; // Clear message on close
+            otpVerificationField.classList.add('hidden'); // Hide OTP field
+            simulatedOtpDisplay.textContent = ''; // Clear simulated OTP
+            loginIdentifierInput.value = ''; // Clear inputs
+            loginPasswordInput.value = '';
+            otpInput.value = '';
+        });
 
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        // Login with Password
+        loginPasswordButton.addEventListener('click', () => {
+            const identifier = loginIdentifierInput.value.trim();
+            const password = loginPasswordInput.value.trim();
+
+            // Check if identifier matches either phone or email for password login
+            if ((identifier === '87220 58888' || identifier === 'ssenterprises666666@gmail.com') && password === ADMIN_PASSWORD_PASS) {
                 isLoggedIn = true;
-                localStorage.setItem('isLoggedIn', 'true'); // Persist login state
-                loginMessage.textContent = 'Login successful!';
-                loginMessage.classList.remove('text-red-400');
-                loginMessage.classList.add('text-green-400');
-                adminUsernameInput.value = ''; // Clear fields
-                adminPasswordInput.value = '';
-                updateAdminUI();
+                localStorage.setItem('isLoggedIn', 'true');
+                loginModalMessage.textContent = 'Login successful!';
+                loginModalMessage.classList.remove('text-red-400');
+                loginModalMessage.classList.add('text-green-400');
+                adminLoginModal.classList.add('hidden'); // Hide modal
+                updateMainAdminButton();
+                updateAdminDashboardVisibility(); // Show dashboard
+                // Clear any previous OTP display
+                otpVerificationField.classList.add('hidden');
+                simulatedOtpDisplay.textContent = '';
+                otpInput.value = '';
             } else {
-                loginMessage.textContent = 'Invalid username or password.';
-                loginMessage.classList.remove('text-green-400');
-                loginMessage.classList.add('text-red-400');
+                loginModalMessage.textContent = 'Invalid username/email/phone or password.';
+                loginModalMessage.classList.remove('text-green-400');
+                loginModalMessage.classList.add('text-red-400');
             }
         });
 
+        // Send Simulated OTP
+        sendOtpButton.addEventListener('click', () => {
+            const identifier = loginIdentifierInput.value.trim();
+
+            if (identifier === adminOtpContact) {
+                simulatedOtpDisplay.textContent = `Your OTP: ${SIMULATED_OTP}`;
+                otpVerificationField.classList.remove('hidden');
+                loginModalMessage.textContent = 'OTP generated! (Check above)';
+                loginModalMessage.classList.remove('text-red-400');
+                loginModalMessage.classList.add('text-green-400');
+            } else {
+                loginModalMessage.textContent = 'Invalid phone number/email for OTP.';
+                loginModalMessage.classList.remove('text-green-400');
+                loginModalMessage.classList.add('text-red-400');
+                otpVerificationField.classList.add('hidden'); // Hide OTP field if identifier is wrong
+            }
+        });
+
+        // Verify OTP
+        verifyOtpButton.addEventListener('click', () => {
+            const otpEntered = otpInput.value.trim();
+
+            if (otpEntered === SIMULATED_OTP) {
+                isLoggedIn = true;
+                localStorage.setItem('isLoggedIn', 'true');
+                loginModalMessage.textContent = 'OTP verified! Login successful!';
+                loginModalMessage.classList.remove('text-red-400');
+                loginModalMessage.classList.add('text-green-400');
+                adminLoginModal.classList.add('hidden'); // Hide modal
+                updateMainAdminButton();
+                updateAdminDashboardVisibility(); // Show dashboard
+                // Clear OTP fields
+                otpVerificationField.classList.add('hidden');
+                simulatedOtpDisplay.textContent = '';
+                otpInput.value = '';
+            } else {
+                loginModalMessage.textContent = 'Invalid OTP. Please try again.';
+                loginModalMessage.classList.remove('text-green-400');
+                loginModalMessage.classList.add('text-red-400');
+            }
+        });
+
+
+        // Add Photo to Portfolio
         addPhotoButton.addEventListener('click', () => {
             if (!isLoggedIn) {
                 adminMessage.textContent = 'You must be logged in as an admin to add photos.';
@@ -530,11 +704,39 @@
             }, 3000);
         });
 
+        // Update Admin OTP Contact
+        updateAdminContactButton.addEventListener('click', () => {
+            if (!isLoggedIn) {
+                otpContactMessage.textContent = 'You must be logged in as an admin to update the contact.';
+                otpContactMessage.classList.add('text-red-400');
+                otpContactMessage.classList.remove('text-green-400');
+                return;
+            }
+            const newContact = newAdminContactInput.value.trim();
+            if (newContact) {
+                adminOtpContact = newContact;
+                localStorage.setItem('adminOtpContact', adminOtpContact); // Persist the new contact
+                otpContactMessage.textContent = `Admin OTP contact updated to: ${adminOtpContact}`;
+                otpContactMessage.classList.remove('text-red-400');
+                otpContactMessage.classList.add('text-green-400');
+            } else {
+                otpContactMessage.textContent = 'Please enter a valid phone number or email.';
+                otpContactMessage.classList.add('text-red-400');
+                otpContactMessage.classList.remove('text-green-400');
+            }
+            setTimeout(() => {
+                otpContactMessage.textContent = '';
+                otpContactMessage.classList.remove('text-green-400');
+                otpContactMessage.classList.add('text-red-400');
+            }, 3000);
+        });
+
 
         // Initial calls when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             renderPortfolio();
-            updateAdminUI(); // Initial check for login state and update UI
+            updateMainAdminButton(); // Update the text of the main admin button
+            updateAdminDashboardVisibility(); // Show/hide dashboard based on login status
         });
 
 
@@ -567,19 +769,17 @@
         document.addEventListener('click', function(event) {
             const isClickInsideMobileMenu = mobileMenu.contains(event.target);
             const isClickOnMobileMenuButton = mobileMenuButton.contains(event.target);
-            const isClickInsideAdminPanel = adminPanel.contains(event.target);
+            const isClickInsideAdminLoginModal = adminLoginModal.contains(event.target);
             const isClickOnAdminToggleButton = adminToggleButton.contains(event.target) || mobileAdminToggleButton.contains(event.target);
-
 
             // Close mobile menu if open and click is outside it and its toggle button
             if (!mobileMenu.classList.contains('hidden') && !isClickInsideMobileMenu && !isClickOnMobileMenuButton) {
                 mobileMenu.classList.add('hidden');
             }
 
-            // Hide admin panel if not logged in and click is outside admin panel and its toggle buttons
-            // This prevents the admin panel from just disappearing if you click the header or another nav link
-            if (!isLoggedIn && !adminPanel.classList.contains('hidden') && !isClickInsideAdminPanel && !isClickOnAdminToggleButton) {
-                 adminPanel.classList.add('hidden');
+            // Close admin login modal if open and click is outside it and its toggle button
+            if (!adminLoginModal.classList.contains('hidden') && !isClickInsideAdminLoginModal && !isClickOnAdminToggleButton) {
+                 adminLoginModal.classList.add('hidden');
             }
         });
 
@@ -592,6 +792,6 @@
                 header.classList.remove('shadow-lg');
             }
         });
-    </script>
+    </s>/script>
 </body>
 </html>
