@@ -50,6 +50,10 @@
                 <a href="#portfolio" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">Portfolio</a>
                 <a href="#testimonials" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">Testimonials</a>
                 <a href="#contact" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">Contact</a>
+                <!-- Admin login/logout button in header for quick access -->
+                <button id="admin-toggle-button" class="text-gray-300 hover:text-red-500 transition duration-300 font-medium text-lg">
+                    Admin Login
+                </button>
             </div>
             <!-- Mobile Menu Button (Hamburger) -->
             <button id="mobile-menu-button" class="md:hidden focus:outline-none">
@@ -63,6 +67,9 @@
             <a href="#portfolio" class="block px-6 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition duration-300 font-medium">Portfolio</a>
             <a href="#testimonials" class="block px-6 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition duration-300 font-medium">Testimonials</a>
             <a href="#contact" class="block px-6 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition duration-300 font-medium">Contact</a>
+            <button id="mobile-admin-toggle-button" class="block w-full text-left px-6 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition duration-300 font-medium">
+                Admin Login
+            </button>
         </div>
     </header>
 
@@ -190,83 +197,40 @@
             </div>
         </section>
 
+        <!-- Admin Panel (Hidden by default) -->
+        <section id="admin-panel" class="py-16 md:py-24 bg-gray-800 rounded-lg mx-4 md:mx-auto max-w-7xl mt-8 px-6 md:px-12 hidden">
+            <div class="container mx-auto">
+                <h2 class="section-heading text-yellow-400">Admin Photo Management</h2>
+                <div class="max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg">
+                    <p class="text-gray-300 text-center mb-6">Add new portfolio images (URL based only).</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="imageUrl" class="block text-lg font-medium text-gray-300 mb-2">Image URL</label>
+                            <input type="url" id="imageUrl" placeholder="e.g., https://example.com/image.jpg" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        </div>
+                        <div>
+                            <label for="imageTitle" class="block text-lg font-medium text-gray-300 mb-2">Image Title</label>
+                            <input type="text" id="imageTitle" placeholder="e.g., Modern Apartment Living" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        </div>
+                        <div>
+                            <label for="imageDescription" class="block text-lg font-medium text-gray-300 mb-2">Image Description</label>
+                            <textarea id="imageDescription" rows="3" placeholder="A brief description of the design." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        </div>
+                        <button id="add-photo-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Photo to Portfolio
+                        </button>
+                    </div>
+                    <p id="admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+            </div>
+        </section>
+
         <!-- Portfolio/Gallery Section -->
         <section id="portfolio" class="py-16 md:py-24 bg-gray-900 rounded-lg mx-4 md:mx-auto max-w-7xl mt-8 px-6 md:px-12">
             <div class="container mx-auto">
                 <h2 class="section-heading">Our Portfolio</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Portfolio Item 1 -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Modern+Living" alt="Modern Living Room" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Modern Living Room</h3>
-                            <p class="text-gray-300 text-sm">Minimalist design with vibrant accents, focusing on comfort and light.</p>
-                        </div>
-                    </div>
-                    <!-- Portfolio Item 2 -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Cozy+Bedroom" alt="Cozy Bedroom" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Cozy Bedroom Retreat</h3>
-                            <p class="text-gray-300 text-sm">Warm tones and soft textures create a serene and inviting sleep sanctuary.</p>
-                        </div>
-                    </div>
-                    <!-- Portfolio Item 3 -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=SS+Kitchen" alt="SS Design Avenue Kitchen" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">SS Design Avenue Culinary Space</h3>
-                            <p class="text-gray-300 text-sm">Sleek design with smart storage solutions and a functional layout.</p>
-                        </div>
-                    </div>
-                    <!-- Portfolio Item 4 -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Elegant+Office" alt="Elegant Home Office" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Elegant Home Office</h3>
-                            <p class="text-gray-300 text-sm">A sophisticated and productive environment for remote work.</p>
-                        </div>
-                    </div>
-                    <!-- Portfolio Item 5 -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Nursery+Design" alt="Nursery Design" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Whimsical Nursery</h3>
-                            <p class="text-gray-300 text-sm">A charming and safe space designed for little ones to grow and play.</p>
-                        </div>
-                    </div>
-                    <!-- Portfolio Item 6 (Originally Dining Area) -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Dining+Area" alt="Spacious Dining Area" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Spacious Dining Area</h3>
-                            <p class="text-gray-300 text-sm">Perfect for entertaining, combining elegance with functionality.</p>
-                        </div>
-                    </div>
-                    <!-- Portfolio Item for Jr. NTR -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Jr.+NTR" alt="Jr. NTR in a stylish pose" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Jr. NTR - The Man of Masses</h3>
-                            <p class="text-gray-300 text-sm">A tribute to the beloved Indian actor, known for his versatile performances.</p>
-                        </div>
-                    </div>
-                    <!-- Portfolio Item for Hari_chowdhary -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Hari+home" alt="Personalized home design by Hari" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Hari's Custom Home Design</h3>
-                            <p class="text-gray-300 text-sm">A unique design reflecting personal tastes and functional elegance.</p>
-                        </div>
-                    </div>
-                    <!-- Portfolio Item for Sai Pallavi -->
-                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Sai+Pallavi" alt="Sai Pallavi in a graceful pose" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Sai Pallavi - Elegance Personified</h3>
-                            <p class="text-gray-300 text-sm">A tribute to the celebrated Indian actress, known for her natural charm.</p>
-                        </div>
-                    </div>
+                <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Portfolio items will be dynamically loaded here by JavaScript -->
                 </div>
             </div>
         </section>
@@ -335,7 +299,7 @@
                         <div>
                             <label for="message" class="block text-lg font-medium text-gray-300 mb-2">Your Message</label>
                             <textarea id="message" name="message" rows="6" required
-                                class="w-full px-5 py-3 border border-gray-700 rounded-lg shadow-sm focus:ring-yellow-400 focus:border-yellow-400 text-lg bg-gray-700 text-white"></textarea>
+                                class="w-full px-5 py-3 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
                         </div>
                         <div class="text-center">
                             <button type="submit"
@@ -372,6 +336,136 @@
     </footer>
 
     <script>
+        // Array to store portfolio items
+        let portfolioItems = [
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Modern+Living", title: "Modern Living Room", description: "Minimalist design with vibrant accents, focusing on comfort and light." },
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Cozy+Bedroom", title: "Cozy Bedroom Retreat", description: "Warm tones and soft textures create a serene and inviting sleep sanctuary." },
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=SS+Kitchen", title: "SS Design Avenue Culinary Space", description: "Sleek design with smart storage solutions and a functional layout." },
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Elegant+Office", title: "Elegant Home Office", description: "A sophisticated and productive environment for remote work." },
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Nursery+Design", title: "Whimsical Nursery", description: "A charming and safe space designed for little ones to grow and play." },
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Dining+Area", title: "Spacious Dining Area", description: "Perfect for entertaining, combining elegance with functionality." },
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Jr.+NTR", title: "Jr. NTR - The Man of Masses", description: "A tribute to the beloved Indian actor, known for his versatile performances." },
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Hari+home", title: "Hari's Custom Home Design", description: "A unique design reflecting personal tastes and functional elegance." },
+            { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Sai+Pallavi", title: "Sai Pallavi - Elegance Personified", description: "A tribute to the celebrated Indian actress, known for her natural charm." }
+        ];
+
+        // Load portfolio items from localStorage if available
+        if (localStorage.getItem('ssDesignPortfolio')) {
+            portfolioItems = JSON.parse(localStorage.getItem('ssDesignPortfolio'));
+        }
+
+        // Function to render portfolio items
+        function renderPortfolio() {
+            const portfolioGrid = document.getElementById('portfolio-grid');
+            portfolioGrid.innerHTML = ''; // Clear existing items
+
+            portfolioItems.forEach(item => {
+                const portfolioCard = `
+                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
+                        <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">${item.title}</h3>
+                            <p class="text-gray-300 text-sm">${item.description}</p>
+                        </div>
+                    </div>
+                `;
+                portfolioGrid.innerHTML += portfolioCard;
+            });
+        }
+
+        // Admin functionality
+        let isAdmin = localStorage.getItem('isAdmin') === 'true'; // Check localStorage for admin status
+
+        const adminToggleButton = document.getElementById('admin-toggle-button');
+        const mobileAdminToggleButton = document.getElementById('mobile-admin-toggle-button');
+        const adminPanel = document.getElementById('admin-panel');
+        const addPhotoButton = document.getElementById('add-photo-button');
+        const imageUrlInput = document.getElementById('imageUrl');
+        const imageTitleInput = document.getElementById('imageTitle');
+        const imageDescriptionInput = document.getElementById('imageDescription');
+        const adminMessage = document.getElementById('admin-message');
+
+        function updateAdminUI() {
+            if (isAdmin) {
+                adminToggleButton.textContent = 'Admin Logout';
+                mobileAdminToggleButton.textContent = 'Admin Logout';
+                adminToggleButton.classList.remove('hover:text-red-500'); // Remove red on hover for login state
+                adminToggleButton.classList.add('hover:text-gray-500'); // Add softer hover for logout state
+                mobileAdminToggleButton.classList.remove('hover:text-red-500');
+                mobileAdminToggleButton.classList.add('hover:bg-gray-700'); // Mobile specific hover
+                adminPanel.classList.remove('hidden');
+            } else {
+                adminToggleButton.textContent = 'Admin Login';
+                mobileAdminToggleButton.textContent = 'Admin Login';
+                adminToggleButton.classList.remove('hover:text-gray-500');
+                adminToggleButton.classList.add('hover:text-red-500');
+                mobileAdminToggleButton.classList.remove('hover:bg-gray-700');
+                mobileAdminToggleButton.classList.add('hover:text-red-500');
+                adminPanel.classList.add('hidden');
+            }
+        }
+
+        adminToggleButton.addEventListener('click', () => {
+            isAdmin = !isAdmin;
+            localStorage.setItem('isAdmin', isAdmin); // Persist admin state
+            updateAdminUI();
+            if (mobileMenu.classList.contains('hidden')) { // Close mobile menu if desktop button clicked
+                 mobileMenu.classList.add('hidden');
+            }
+            adminMessage.textContent = ''; // Clear any previous messages
+        });
+
+        mobileAdminToggleButton.addEventListener('click', () => {
+            isAdmin = !isAdmin;
+            localStorage.setItem('isAdmin', isAdmin); // Persist admin state
+            updateAdminUI();
+            mobileMenu.classList.add('hidden'); // Close mobile menu after toggle
+            adminMessage.textContent = ''; // Clear any previous messages
+        });
+
+
+        addPhotoButton.addEventListener('click', () => {
+            const url = imageUrlInput.value.trim();
+            const title = imageTitleInput.value.trim();
+            const description = imageDescriptionInput.value.trim();
+
+            if (!url || !title) {
+                adminMessage.textContent = 'Image URL and Title are required.';
+                return;
+            }
+
+            const newItem = {
+                imageUrl: url,
+                title: title,
+                description: description || 'No description provided.' // Default description
+            };
+
+            portfolioItems.push(newItem);
+            localStorage.setItem('ssDesignPortfolio', JSON.stringify(portfolioItems)); // Save to localStorage
+            renderPortfolio(); // Re-render the portfolio
+            adminMessage.textContent = 'Photo added successfully!';
+            adminMessage.classList.remove('text-red-400');
+            adminMessage.classList.add('text-green-400');
+            imageUrlInput.value = ''; // Clear form fields
+            imageTitleInput.value = '';
+            imageDescriptionInput.value = '';
+
+            // Clear message after a few seconds
+            setTimeout(() => {
+                adminMessage.textContent = '';
+                adminMessage.classList.remove('text-green-400');
+                adminMessage.classList.add('text-red-400');
+            }, 3000);
+        });
+
+
+        // Initial calls when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPortfolio();
+            updateAdminUI();
+        });
+
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -401,8 +495,9 @@
         document.addEventListener('click', function(event) {
             const isClickInsideMobileMenu = mobileMenu.contains(event.target);
             const isClickOnMobileMenuButton = mobileMenuButton.contains(event.target);
+            const isClickInsideAdminPanel = adminPanel.contains(event.target);
 
-            if (!isClickInsideMobileMenu && !isClickOnMobileMenuButton && !mobileMenu.classList.contains('hidden')) {
+            if (!isClickInsideMobileMenu && !isClickOnMobileMenuButton && !isClickInsideAdminPanel && !mobileMenu.classList.contains('hidden')) {
                 mobileMenu.classList.add('hidden');
             }
         });
