@@ -48,6 +48,11 @@
             align-items: center;
             z-index: 1000; /* Above everything else */
         }
+        /* Ensure the 'hidden' class truly hides the modal */
+        .modal-overlay.hidden {
+            display: none !important; 
+        }
+
         .modal-content {
             background-color: #1a1a1a;
             padding: 2.5rem;
@@ -68,6 +73,60 @@
                 opacity: 1;
                 transform: scale(1);
             }
+        }
+        /* Style for the file input wrapper */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            border: 2px dashed #ca8a04; /* amber-600 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem 1.5rem; /* px-6 py-3 */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            color: #facc15; /* yellow-400 */
+            font-weight: 600; /* font-semibold */
+            text-align: center;
+        }
+        .file-input-wrapper:hover {
+            background-color: #333333; /* Darker gray on hover */
+            border-color: #eab308; /* yellow-500 */
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        .admin-section-buttons button {
+            white-space: nowrap; /* Prevent text wrapping on buttons */
+        }
+
+        /* Styling for the delete button on portfolio items */
+        .delete-button {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            border-radius: 9999px; /* full rounded */
+            padding: 0.5rem; /* p-2 */
+            font-size: 0.75rem; /* text-xs */
+            transition: background-color 0.2s ease-in-out;
+            position: absolute; /* positioned relative to its parent .dynamic-portfolio-item */
+            top: 0.5rem; /* Adjust as needed */
+            right: 0.5rem; /* Adjust as needed */
+            z-index: 10; /* Ensure it's above the image/text */
+            display: flex; /* To center SVG icon if present */
+            align-items: center;
+            justify-content: center;
+        }
+        .delete-button:hover {
+            background-color: #dc2626; /* red-600 */
+        }
+        /* Make sure the parent of the delete button is relative */
+        .dynamic-portfolio-item {
+            position: relative;
         }
     </style>
 </head>
@@ -155,7 +214,7 @@
             <div class="container mx-auto">
                 <h2 class="section-heading">Our Services</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Service Card 1 - Link to new page -->
+                    <!-- Service Card 1 - Residential Design -->
                     <a href="residential-design.html" class="block bg-gray-900 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transform hover:scale-102 transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -167,7 +226,7 @@
                             Crafting beautiful and functional living spaces that reflect your personal style and comfort. From concept to completion, we make your dream home a reality.
                         </p>
                     </a>
-                    <!-- Service Card 2 - Link to new page -->
+                    <!-- Service Card 2 - Commercial Design -->
                     <a href="commercial-design.html" class="block bg-gray-900 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transform hover:scale-102 transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -175,11 +234,11 @@
                             </svg>
                         </div>
                         <h3 class="text-2xl font-semibold text-yellow-400 mb-3">Commercial Design</h3>
-                        <p class="text-gray-300">
+                        <p class="text-300">
                             Designing productive and engaging commercial environments that enhance brand identity and employee well-being.
                         </p>
                     </a>
-                    <!-- Service Card 3 - Link to new page -->
+                    <!-- Service Card 3 - Space Planning -->
                     <a href="space-planning.html" class="block bg-gray-900 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transform hover:scale-102 transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -191,7 +250,7 @@
                             Optimizing layouts and flow to maximize functionality and aesthetic appeal within any given space.
                         </p>
                     </a>
-                    <!-- Service Card 4 - Link to new page -->
+                    <!-- Service Card 4 - Furniture & Decor Selection -->
                     <a href="furniture-decor.html" class="block bg-gray-900 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transform hover:scale-102 transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -203,7 +262,7 @@
                             Curating the perfect furniture, lighting, and accessories to complement your design and elevate the ambiance.
                         </p>
                     </a>
-                    <!-- Service Card 5 - Link to new page -->
+                    <!-- Service Card 5 - Lighting Design -->
                     <a href="lighting-design.html" class="block bg-gray-900 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transform hover:scale-102 transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -215,7 +274,7 @@
                             Developing comprehensive lighting plans to enhance mood, functionality, and architectural features.
                         </p>
                     </a>
-                    <!-- Service Card 6 - Link to new page -->
+                    <!-- Service Card 6 - Renovation & Remodeling -->
                     <a href="renovation-remodeling.html" class="block bg-gray-900 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transform hover:scale-102 transition duration-300">
                         <div class="text-indigo-600 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -236,8 +295,54 @@
             <div class="container mx-auto">
                 <h2 class="section-heading text-yellow-400">Admin Dashboard</h2>
 
-                <!-- Photo Management Form -->
-                <div class="max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10">
+                <!-- Admin Dashboard Controls/Navigation -->
+                <div class="admin-section-buttons flex flex-wrap justify-center gap-4 mb-10">
+                    <button id="show-general-portfolio-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        General Portfolio
+                    </button>
+                    <button id="show-residential-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Residential Design
+                    </button>
+                    <button id="show-commercial-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Commercial Design
+                    </button>
+                    <button id="show-space-planning-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Space Planning
+                    </button>
+                    <button id="show-furniture-decor-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Furniture & Decor
+                    </button>
+                    <button id="show-lighting-design-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Lighting Design
+                    </button>
+                    <button id="show-renovation-remodeling-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Renovation & Remodeling
+                    </button>
+                    <button id="show-modern-living-room-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Modern Living Room
+                    </button>
+                    <button id="show-cozy-bedroom-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Cozy Bedroom Retreat
+                    </button>
+                    <button id="show-ss-kitchen-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        SS Kitchen
+                    </button>
+                    <button id="show-elegant-home-office-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Elegant Home Office
+                    </button>
+                    <button id="show-whimsical-nursery-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Whimsical Nursery
+                    </button>
+                    <button id="show-spacious-dining-area-upload" class="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300 text-sm md:text-base">
+                        Spacious Dining Area
+                    </button>
+                    <button id="show-otp-contact-update" class="bg-yellow-600 text-white font-semibold px-4 py-2 rounded-full hover:bg-yellow-700 transition duration-300 text-sm md:text-base">
+                        Update OTP Contact
+                    </button>
+                </div>
+
+                <!-- General Portfolio Photo Management Form -->
+                <div id="general-portfolio-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10">
                     <p class="text-gray-300 text-center mb-6">Add New Portfolio Images (URL based only)</p>
                     <div class="space-y-4">
                         <div>
@@ -259,8 +364,248 @@
                     <p id="admin-message" class="text-center mt-4 text-sm text-red-400"></p>
                 </div>
 
+                <!-- Residential Design Image Upload Form -->
+                <div id="residential-design-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Residential Design Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Residential Design projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminResidentialImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminResidentialImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminResidentialImageTitle" placeholder="Image Title (e.g., Luxury Villa Living)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminResidentialImageDescription" rows="3" placeholder="Description of the residential design image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-residential-design-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Residential Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="residential-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Commercial Design Image Upload Form -->
+                <div id="commercial-design-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Commercial Design Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Commercial Design projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminCommercialImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminCommercialImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminCommercialImageTitle" placeholder="Image Title (e.g., Modern Office Space)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminCommercialImageDescription" rows="3" placeholder="Description of the commercial design image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-commercial-design-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Commercial Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="commercial-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Space Planning Image Upload Form -->
+                <div id="space-planning-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Space Planning Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Space Planning projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminSpacePlanningImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminSpacePlanningImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminSpacePlanningImageTitle" placeholder="Image Title (e.g., Efficient Office Layout)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminSpacePlanningImageDescription" rows="3" placeholder="Description of the space planning image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-space-planning-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Space Planning Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="space-planning-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Furniture & Decor Selection Image Upload Form -->
+                <div id="furniture-decor-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Furniture & Decor Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Furniture & Decor projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminFurnitureDecorImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminFurnitureDecorImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminFurnitureDecorImageTitle" placeholder="Image Title (e.g., Elegant Living Room Decor)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminFurnitureDecorImageDescription" rows="3" placeholder="Description of the furniture & decor image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-furniture-decor-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Furniture & Decor Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="furniture-decor-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Lighting Design Image Upload Form -->
+                <div id="lighting-design-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Lighting Design Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Lighting Design projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminLightingDesignImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminLightingDesignImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminLightingDesignImageTitle" placeholder="Image Title (e.g., Dynamic Kitchen Lighting)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminLightingDesignImageDescription" rows="3" placeholder="Description of the lighting design image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-lighting-design-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Lighting Design Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="lighting-design-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Renovation & Remodeling Image Upload Form -->
+                <div id="renovation-remodeling-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Renovation & Remodeling Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Renovation & Remodeling projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminRenovationRemodelingImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminRenovationRemodelingImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminRenovationRemodelingImageTitle" placeholder="Image Title (e.g., Transformed Bathroom)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminRenovationRemodelingImageDescription" rows="3" placeholder="Description of the renovation & remodeling image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-renovation-remodeling-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Renovation & Remodeling Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="renovation-remodeling-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Modern Living Room Image Upload Form -->
+                <div id="modern-living-room-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Modern Living Room Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Modern Living Room projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminModernLivingRoomImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminModernLivingRoomImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminModernLivingRoomImageTitle" placeholder="Image Title (e.g., Sleek City Apartment)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminModernLivingRoomImageDescription" rows="3" placeholder="Description of the modern living room image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-modern-living-room-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Modern Living Room Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="modern-living-room-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Cozy Bedroom Retreat Image Upload Form -->
+                <div id="cozy-bedroom-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Cozy Bedroom Retreat Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Cozy Bedroom Retreat projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminCozyBedroomImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminCozyBedroomImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminCozyBedroomImageTitle" placeholder="Image Title (e.g., Rustic Charm Bedroom)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminCozyBedroomImageDescription" rows="3" placeholder="Description of the cozy bedroom retreat image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-cozy-bedroom-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Cozy Bedroom Retreat Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="cozy-bedroom-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- SS Design Avenue Culinary Space Image Upload Form -->
+                <div id="ss-kitchen-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add SS Design Avenue Culinary Space Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for SS Design Avenue Culinary Space projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminSsKitchenImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminSsKitchenImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminSsKitchenImageTitle" placeholder="Image Title (e.g., Contemporary Kitchen Island)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminSsKitchenImageDescription" rows="3" placeholder="Description of the SS Design Avenue culinary space image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-ss-kitchen-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add SS Design Avenue Culinary Space Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="ss-kitchen-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Elegant Home Office Image Upload Form -->
+                <div id="elegant-home-office-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Elegant Home Office Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Elegant Home Office projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminElegantHomeOfficeImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminElegantHomeOfficeImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminElegantHomeOfficeImageTitle" placeholder="Image Title (e.g., Executive Study Room)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminElegantHomeOfficeImageDescription" rows="3" placeholder="Description of the elegant home office image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-elegant-home-office-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Elegant Home Office Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="elegant-home-office-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Whimsical Nursery Image Upload Form -->
+                <div id="whimsical-nursery-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Whimsical Nursery Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Whimsical Nursery projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminWhimsicalNurseryImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminWhimsicalNurseryImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminWhimsicalNurseryImageTitle" placeholder="Image Title (e.g., Enchanted Forest Nursery)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminWhimsicalNurseryImageDescription" rows="3" placeholder="Description of the whimsical nursery image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-whimsical-nursery-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Whimsical Nursery Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="whimsical-nursery-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <!-- Spacious Dining Area Image Upload Form -->
+                <div id="spacious-dining-area-upload-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg mb-10 hidden">
+                    <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Add Spacious Dining Area Image</h3>
+                    <p class="text-gray-400 text-sm mb-4 text-center">
+                        Upload a new image specifically for Spacious Dining Area projects. (Client-side simulation only, not persistent).
+                    </p>
+                    <div class="space-y-4">
+                        <label for="adminSpaciousDiningAreaImageFile" class="file-input-wrapper block mx-auto">
+                            <span>Select Image File</span>
+                            <input type="file" id="adminSpaciousDiningAreaImageFile" accept="image/*">
+                        </label>
+                        <input type="text" id="adminSpaciousDiningAreaImageTitle" placeholder="Image Title (e.g., Grand Dining Hall)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        <textarea id="adminSpaciousDiningAreaImageDescription" rows="3" placeholder="Description of the spacious dining area image." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                        <button id="add-spacious-dining-area-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Add Spacious Dining Area Image to Portfolio
+                        </button>
+                    </div>
+                    <p id="spacious-dining-area-admin-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
                 <!-- Admin OTP Contact Change Form -->
-                <div class="max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg">
+                <div id="otp-contact-form" class="admin-form-section max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg hidden">
                     <h3 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Update Admin OTP Contact</h3>
                     <p class="text-gray-300 text-center mb-6 text-sm">This updates the contact (phone or email) for simulated OTP login.</p>
                     <div class="space-y-4">
@@ -284,50 +629,6 @@
                 <h2 class="section-heading">Our Portfolio</h2>
                 <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Portfolio items will be dynamically loaded here by JavaScript -->
-                    <!-- Hardcoded items replaced by dynamic loading or updated to be dynamic -->
-                    <a href="modern-living-room.html" class="block bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Modern+Living" alt="Modern Living Room" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Modern Living Room</h3>
-                            <p class="text-gray-300 text-sm">Minimalist design with vibrant accents, focusing on comfort and light.</p>
-                        </div>
-                    </a>
-                    <a href="cozy-bedroom.html" class="block bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Cozy+Bedroom" alt="Cozy Bedroom" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Cozy Bedroom Retreat</h3>
-                            <p class="text-gray-300 text-sm">Warm tones and soft textures create a serene and inviting sleep sanctuary.</p>
-                        </div>
-                    </a>
-                    <a href="ss-kitchen.html" class="block bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=SS+Kitchen" alt="SS Design Avenue Kitchen" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">SS Design Avenue Culinary Space</h3>
-                            <p class="text-gray-300 text-sm">Sleek design with smart storage solutions and a functional layout.</p>
-                        </div>
-                    </a>
-                    <a href="elegant-home-office.html" class="block bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Elegant+Office" alt="Elegant Home Office" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Elegant Home Office</h3>
-                            <p class="text-gray-300 text-sm">A sophisticated and productive environment for remote work.</p>
-                        </div>
-                    </a>
-                    <a href="whimsical-nursery.html" class="block bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Nursery+Design" alt="Nursery Design" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Whimsical Nursery</h3>
-                            <p class="text-gray-300 text-sm">A charming and safe space designed for little ones to grow and play.</p>
-                        </div>
-                    </a>
-                    <a href="spacious-dining-area.html" class="block bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
-                        <img src="https://placehold.co/600x400/000000/facc15?text=Dining+Area" alt="Spacious Dining Area" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">Spacious Dining Area</h3>
-                            <p class="text-gray-300 text-sm">Perfect for entertaining, combining elegance with functionality.</p>
-                        </div>
-                    </a>
-                    <!-- Items added dynamically by Admin will still appear here -->
                 </div>
             </div>
         </section>
@@ -473,6 +774,22 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-confirmation-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4 text-center">Confirm Deletion</h2>
+            <p class="text-gray-300 text-center mb-6">Are you sure you want to delete this image?</p>
+            <div class="flex justify-center gap-4">
+                <button id="confirm-delete-button" class="bg-red-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-red-700 transition duration-300">
+                    Delete
+                </button>
+                <button id="cancel-delete-button" class="bg-gray-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-gray-700 transition duration-300">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         // --- Admin Credentials (Hardcoded - INSECURE for production) ---
@@ -487,15 +804,21 @@
         let adminOtpContact = localStorage.getItem('adminOtpContact') || '+918722058888'; // Phone number without spaces for consistency
         const SIMULATED_OTP = '123456'; // This OTP will be "sent" (displayed)
 
-        // Array to store portfolio items
-        // Note: Initial items are hardcoded for direct linking on the main page.
-        // Admin-added items are stored separately in localStorage and rendered dynamically.
-        let portfolioItems = [
-            // These are the original items that now link to separate pages.
-            // The dynamic rendering function will only add items from localStorage.
+        // Array to store static portfolio items (those that link to separate pages)
+        const staticPortfolioItems = [
+            { id: 'modern-living-room', imageUrl: "https://placehold.co/600x400/000000/facc15?text=Modern+Living", title: "Modern Living Room", description: "Minimalist design with vibrant accents, focusing on comfort and light.", page: "modern-living-room.html", tag: "Portfolio" },
+            { id: 'cozy-bedroom', imageUrl: "https://placehold.co/600x400/000000/facc15?text=Cozy+Bedroom", title: "Cozy Bedroom Retreat", description: "Warm tones and soft textures create a serene and inviting sleep sanctuary.", page: "cozy-bedroom.html", tag: "Portfolio" },
+            { id: 'ss-kitchen', imageUrl: "https://placehold.co/600x400/000000/facc15?text=SS+Kitchen", title: "SS Design Avenue Culinary Space", description: "Sleek design with smart storage solutions and a functional layout.", page: "ss-kitchen.html", tag: "Portfolio" },
+            { id: 'elegant-home-office', imageUrl: "https://placehold.co/600x400/000000/facc15?text=Elegant+Office", title: "Elegant Home Office", description: "A sophisticated and productive environment for remote work.", page: "elegant-home-office.html", tag: "Portfolio" },
+            { id: 'whimsical-nursery', imageUrl: "https://placehold.co/600x400/000000/facc15?text=Nursery+Design", title: "Whimsical Nursery", description: "A charming and safe space designed for little ones to grow and play.", page: "whimsical-nursery.html", tag: "Portfolio" },
+            { id: 'spacious-dining-area', imageUrl: "https://placehold.co/600x400/000000/facc15?text=Dining+Area", title: "Spacious Dining Area", description: "Perfect for entertaining, combining elegance with functionality.", page: "spacious-dining-area.html", tag: "Portfolio" },
+            { id: 'jr-ntr', imageUrl: "https://placehold.co/600x400/000000/facc15?text=Jr.+NTR", title: "Jr. NTR - The Man of Masses", description: "A tribute to the beloved Indian actor, known for his versatile performances.", page: "jr-ntr.html", tag: "Tribute" },
+            { id: 'hari-home', imageUrl: "https://placehold.co/600x400/000000/facc15?text=Hari+home", title: "Hari's Custom Home Design", description: "A unique design reflecting personal tastes and functional elegance.", page: "hari-custom-home-design.html", tag: "Residential" }, // Changed tag from "Residential" to be more specific
+            { id: 'sai-pallavi', imageUrl: "https://placehold.co/600x400/000000/facc15?text=Sai+Pallavi", title: "Sai Pallavi - Elegance Personified", description: "A tribute to the celebrated Indian actress, known for her natural charm.", page: "sai-pallavi.html", tag: "Tribute" }
         ];
 
-        // Load dynamic portfolio items from localStorage if available
+
+        // Array to store dynamically added portfolio items (from admin panel)
         let dynamicPortfolioItems = [];
         if (localStorage.getItem('ssDesignPortfolio')) {
             try {
@@ -506,41 +829,60 @@
             }
         }
 
-        // Function to render portfolio items
-        // This function now only adds dynamically created items to the grid.
-        // The static items are part of the HTML structure directly linked.
+        // Function to render all portfolio items (static + dynamic)
+        // This function is for the main index.html page only.
+        // It renders all portfolio items regardless of type.
         function renderPortfolio() {
+            console.log('Rendering portfolio. isLoggedIn:', isLoggedIn);
             const portfolioGrid = document.getElementById('portfolio-grid');
-            // Remove dynamically added items before re-rendering to avoid duplicates
-            // We need to keep the static items in the HTML for direct linking.
-            // A more robust solution might render ALL portfolio items (static & dynamic)
-            // purely from JS, but that's a bigger refactor.
-            const existingDynamicItems = portfolioGrid.querySelectorAll('.dynamic-portfolio-item');
-            existingDynamicItems.forEach(item => item.remove());
+            if (!portfolioGrid) return; // Exit if portfolio-grid doesn't exist (e.g., on other pages)
+            portfolioGrid.innerHTML = ''; // Clear existing items
 
-
-            dynamicPortfolioItems.forEach(item => {
+            // Render static items first
+            staticPortfolioItems.forEach(item => {
                 const portfolioCard = `
-                    <a href="#" class="block bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300 dynamic-portfolio-item">
+                    <a href="${item.page}" class="block bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300">
                         <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
                         <div class="p-6">
                             <h3 class="text-xl font-semibold text-yellow-400 mb-2">${item.title}</h3>
                             <p class="text-gray-300 text-sm">${item.description}</p>
+                            ${item.tag ? `<span class="inline-block bg-indigo-600 text-white text-xs px-2 py-1 rounded-full mt-2">${item.tag}</span>` : ''}
                         </div>
                     </a>
                 `;
-                // Append new dynamic items. If you want them always at the top,
-                // you'd prepend, or rebuild the whole grid each time.
+                portfolioGrid.innerHTML += portfolioCard;
+            });
+
+            // Then render dynamic items
+            dynamicPortfolioItems.forEach(item => {
+                const portfolioCard = `
+                    <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300 dynamic-portfolio-item relative">
+                        <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-yellow-400 mb-2">${item.title}</h3>
+                            <p class="text-gray-300 text-sm">${item.description}</p>
+                            ${item.type ? `<span class="inline-block bg-indigo-600 text-white text-xs px-2 py-1 rounded-full mt-2">${item.type.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</span>` : ''}
+                        </div>
+                        ${isLoggedIn ? `
+                            <button class="delete-button" data-image-url="${item.imageUrl}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
                 portfolioGrid.innerHTML += portfolioCard;
             });
         }
 
         // Admin authentication and UI elements
-        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Check localStorage for login status
+        // Initialize isLoggedIn based on localStorage. If 'true', it's true, otherwise false.
+        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; 
 
         const adminToggleButton = document.getElementById('admin-toggle-button');
         const mobileAdminToggleButton = document.getElementById('mobile-admin-toggle-button');
-        const adminDashboard = document.getElementById('admin-dashboard'); // This is the new dashboard section
+        const adminDashboard = document.getElementById('admin-dashboard');
         const adminLoginModal = document.getElementById('admin-login-modal');
         const closeModalButton = document.getElementById('close-modal-button');
 
@@ -555,17 +897,130 @@
         const verifyOtpButton = document.getElementById('verify-otp-button');
         const loginModalMessage = document.getElementById('login-modal-message');
 
-        // Photo management elements (inside admin dashboard)
+        // Admin Dashboard Forms/Sections (grouped for easy iteration)
+        const adminForms = {
+            'general-portfolio': document.getElementById('general-portfolio-form'),
+            'residential-design': document.getElementById('residential-design-upload-form'),
+            'commercial-design': document.getElementById('commercial-design-upload-form'),
+            'space-planning': document.getElementById('space-planning-upload-form'),
+            'furniture-decor': document.getElementById('furniture-decor-upload-form'),
+            'lighting-design': document.getElementById('lighting-design-upload-form'),
+            'renovation-remodeling': document.getElementById('renovation-remodeling-upload-form'),
+            'modern-living-room': document.getElementById('modern-living-room-upload-form'),
+            'cozy-bedroom': document.getElementById('cozy-bedroom-upload-form'),
+            'ss-kitchen': document.getElementById('ss-kitchen-upload-form'),
+            'elegant-home-office': document.getElementById('elegant-home-office-upload-form'),
+            'whimsical-nursery': document.getElementById('whimsical-nursery-upload-form'),
+            'spacious-dining-area': document.getElementById('spacious-dining-area-upload-form'),
+            'otp-contact': document.getElementById('otp-contact-form')
+        };
+
+        // Admin Dashboard Navigation Buttons
+        const showGeneralPortfolioUploadButton = document.getElementById('show-general-portfolio-upload');
+        const showResidentialUploadButton = document.getElementById('show-residential-upload');
+        const showCommercialUploadButton = document.getElementById('show-commercial-upload');
+        const showSpacePlanningUploadButton = document.getElementById('show-space-planning-upload');
+        const showFurnitureDecorUploadButton = document.getElementById('show-furniture-decor-upload');
+        const showLightingDesignUploadButton = document.getElementById('show-lighting-design-upload');
+        const showRenovationRemodelingUploadButton = document.getElementById('show-renovation-remodeling-upload');
+        const showModernLivingRoomUploadButton = document.getElementById('show-modern-living-room-upload');
+        const showCozyBedroomUploadButton = document.getElementById('show-cozy-bedroom-upload');
+        const showSsKitchenUploadButton = document.getElementById('show-ss-kitchen-upload');
+        const showElegantHomeOfficeUploadButton = document.getElementById('show-elegant-home-office-upload');
+        const showWhimsicalNurseryUploadButton = document.getElementById('show-whimsical-nursery-upload');
+        const showSpaciousDiningAreaUploadButton = document.getElementById('show-spacious-dining-area-upload');
+        const showOtpContactUpdateButton = document.getElementById('show-otp-contact-update');
+
+        // General Photo management elements
         const addPhotoButton = document.getElementById('add-photo-button');
         const imageUrlInput = document.getElementById('imageUrl');
         const imageTitleInput = document.getElementById('imageTitle');
         const imageDescriptionInput = document.getElementById('imageDescription');
         const adminMessage = document.getElementById('admin-message');
 
-        // OTP contact update elements (inside admin dashboard)
+        // OTP contact update elements
         const newAdminContactInput = document.getElementById('newAdminContact');
         const updateAdminContactButton = document.getElementById('update-admin-contact-button');
         const otpContactMessage = document.getElementById('otp-contact-message');
+
+        // Delete Confirmation Modal elements
+        const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
+        const confirmDeleteButton = document.getElementById('confirm-delete-button');
+        const cancelDeleteButton = document.getElementById('cancel-delete-button');
+        let imageUrlToDelete = null; // Variable to store the URL of the image to be deleted
+
+        // Helper function to handle image uploads for various categories
+        function setupImageUpload(formId, fileInputId, titleInputId, descriptionInputId, messageId, type) {
+            const fileInput = document.getElementById(fileInputId);
+            const titleInput = document.getElementById(titleInputId);
+            const descriptionInput = document.getElementById(descriptionInputId);
+            const messageElement = document.getElementById(messageId);
+            const addButton = document.getElementById(`add-${formId.replace(/-upload-form/,'')}-image-button`);
+
+            if (!addButton) return; // Exit if button not found for this type
+
+            addButton.addEventListener('click', () => {
+                if (!isLoggedIn) {
+                    messageElement.textContent = 'You must be logged in as an admin to add photos.';
+                    messageElement.classList.add('text-red-400');
+                    messageElement.classList.remove('text-green-400');
+                    return;
+                }
+
+                const file = fileInput.files[0];
+                const title = titleInput.value.trim();
+                const description = descriptionInput.value.trim();
+
+                if (!file) {
+                    messageElement.textContent = 'Please select an image file.';
+                    messageElement.classList.add('text-red-400');
+                    messageElement.classList.remove('text-green-400');
+                    return;
+                }
+                if (!title) {
+                    messageElement.textContent = 'Please enter an image title.';
+                    messageElement.classList.add('text-red-400');
+                    messageElement.classList.remove('text-green-400');
+                    return;
+                }
+
+                messageElement.textContent = ''; // Clear previous message
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const imageData = {
+                        imageUrl: e.target.result, // Base64 data URL
+                        title: title,
+                        description: description || 'No description provided.',
+                        type: type // Assign the specific type
+                    };
+                    dynamicPortfolioItems.push(imageData); // Add to dynamic portfolio
+                    localStorage.setItem('ssDesignPortfolio', JSON.stringify(dynamicPortfolioItems));
+                    renderPortfolio(); // Re-render the main portfolio grid
+                    messageElement.textContent = `Image for ${type.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} added successfully!`;
+                    messageElement.classList.remove('text-red-400');
+                    messageElement.classList.add('text-green-400');
+
+                    // Clear input fields after display
+                    fileInput.value = ''; // Clear the file input
+                    titleInput.value = '';
+                    descriptionInput.value = '';
+
+                    setTimeout(() => {
+                        messageElement.textContent = '';
+                        messageElement.classList.remove('text-green-400');
+                    }, 3000);
+                };
+
+                reader.onerror = function() {
+                    messageElement.textContent = 'Failed to read image file.';
+                    messageElement.classList.add('text-red-400');
+                };
+
+                reader.readAsDataURL(file); // Read the file as a Base64 data URL
+            });
+        }
 
 
         // Function to update the text of the main admin login/logout buttons
@@ -579,10 +1034,12 @@
             }
         }
 
-        // Function to show/hide the admin dashboard section
+        // Function to show/hide the admin dashboard section and default to general portfolio form
         function updateAdminDashboardVisibility() {
             if (isLoggedIn) {
                 adminDashboard.classList.remove('hidden');
+                // By default, show the general portfolio form when admin dashboard is revealed
+                showAdminForm('general-portfolio');
                 // Pre-fill the current OTP contact when dashboard is shown
                 newAdminContactInput.value = adminOtpContact;
             } else {
@@ -590,15 +1047,25 @@
             }
         }
 
-        // Function to clear and reset login modal fields and messages
-        function resetLoginModal() {
-            loginModalMessage.textContent = ''; // Clear message
-            loginModalMessage.classList.remove('text-green-400', 'text-red-400');
-            otpVerificationField.classList.add('hidden'); // Hide OTP field
-            simulatedOtpDisplay.textContent = ''; // Clear simulated OTP
-            otpInput.value = ''; // Clear OTP input
-            loginIdentifierInput.value = ''; // Clear identifier input
-            loginPasswordInput.value = ''; // Clear password input
+        // Function to hide all admin forms and then show the selected one
+        function showAdminForm(formType) {
+            for (const key in adminForms) {
+                if (adminForms.hasOwnProperty(key)) {
+                    adminForms[key].classList.add('hidden');
+                }
+            }
+
+            // Clear all messages
+            // Get all elements with IDs ending in '-message'
+            document.querySelectorAll('[id$="-message"]').forEach(element => {
+                element.textContent = '';
+                element.classList.remove('text-green-400', 'text-red-400');
+            });
+
+
+            if (adminForms[formType]) {
+                adminForms[formType].classList.remove('hidden');
+            }
         }
 
         // Event listener for the main Admin Login/Logout button in the header
@@ -609,8 +1076,10 @@
                 localStorage.setItem('isLoggedIn', 'false'); // Clear login state in local storage
                 updateMainAdminButton(); // Update button text to "Admin Login"
                 updateAdminDashboardVisibility(); // Hide the admin dashboard
-                // Optionally show a quick logout message, but modal won't be open
+                // Ensure modal is hidden on logout
+                adminLoginModal.classList.add('hidden');
                 console.log("Logged out successfully."); // For debugging
+                renderPortfolio(); // Re-render portfolio to hide delete buttons
             } else {
                 // If not logged in, show the login modal
                 resetLoginModal(); // Reset modal before showing
@@ -625,7 +1094,9 @@
                 localStorage.setItem('isLoggedIn', 'false');
                 updateMainAdminButton();
                 updateAdminDashboardVisibility();
+                adminLoginModal.classList.add('hidden'); // Ensure modal is hidden on mobile logout
                 console.log("Logged out successfully (mobile)."); // For debugging
+                renderPortfolio(); // Re-render portfolio to hide delete buttons
             } else {
                 resetLoginModal();
                 adminLoginModal.classList.remove('hidden');
@@ -638,6 +1109,21 @@
             adminLoginModal.classList.add('hidden'); // Hide the modal
             resetLoginModal(); // Clear and reset fields
         });
+
+        // Function to clear and reset login modal fields and messages
+        function resetLoginModal() {
+            loginModalMessage.textContent = ''; // Clear message
+            loginModalMessage.classList.remove('text-green-400', 'text-red-400');
+            otpVerificationField.classList.add('hidden'); // Hide OTP field
+            simulatedOtpDisplay.textContent = ''; // Clear simulated OTP
+            otpInput.value = ''; // Clear OTP input
+            loginIdentifierInput.value = ''; // Clear identifier input
+            loginPasswordInput.value = ''; // Clear password input
+            // Make sure password field is visible when resetting (in case it was hidden for OTP)
+            document.getElementById('password-field').classList.remove('hidden');
+            document.getElementById('login-password-button').classList.remove('hidden');
+            sendOtpButton.classList.remove('hidden');
+        }
 
         // Event listener for "Login with Password" button inside the modal
         loginPasswordButton.addEventListener('click', () => {
@@ -659,7 +1145,8 @@
                 setTimeout(() => {
                     adminLoginModal.classList.add('hidden');
                     updateMainAdminButton();
-                    updateAdminDashboardVisibility();
+                    updateAdminDashboardVisibility(); // Show dashboard
+                    renderPortfolio(); // Re-render portfolio to show delete buttons
                     resetLoginModal(); // Clear inputs for next time
                 }, 500); // Small delay for message visibility
             } else {
@@ -681,6 +1168,10 @@
                 loginModalMessage.textContent = 'OTP generated! (Check above)';
                 loginModalMessage.classList.remove('text-red-400');
                 loginModalMessage.classList.add('text-green-400');
+                // Hide password related fields
+                document.getElementById('password-field').classList.add('hidden');
+                loginPasswordButton.classList.add('hidden');
+                sendOtpButton.classList.add('hidden'); // Hide send OTP button after sending
             } else {
                 loginModalMessage.textContent = 'Invalid phone number/email for OTP.';
                 loginModalMessage.classList.remove('text-green-400');
@@ -704,7 +1195,8 @@
                 setTimeout(() => {
                     adminLoginModal.classList.add('hidden');
                     updateMainAdminButton();
-                    updateAdminDashboardVisibility();
+                    updateAdminDashboardVisibility(); // Show dashboard
+                    renderPortfolio(); // Re-render portfolio to show delete buttons
                     resetLoginModal(); // Clear inputs for next time
                 }, 500); // Small delay for message visibility
             } else {
@@ -714,7 +1206,7 @@
             }
         });
 
-        // Event listener for adding photos to the portfolio (inside admin dashboard)
+        // Event listener for "Add General Photo to Portfolio" button
         addPhotoButton.addEventListener('click', () => {
             if (!isLoggedIn) {
                 adminMessage.textContent = 'You must be logged in as an admin to add photos.';
@@ -737,10 +1229,11 @@
             const newItem = {
                 imageUrl: url,
                 title: title,
-                description: description || 'No description provided.'
+                description: description || 'No description provided.',
+                type: 'general' // Mark as general portfolio item
             };
 
-            dynamicPortfolioItems.push(newItem); // Add to dynamic items array
+            dynamicPortfolioItems.push(newItem);
             localStorage.setItem('ssDesignPortfolio', JSON.stringify(dynamicPortfolioItems));
             renderPortfolio(); // Re-render to show new item
             adminMessage.textContent = 'Photo added successfully!';
@@ -757,6 +1250,44 @@
                 adminMessage.classList.add('text-red-400');
             }, 3000);
         });
+
+        // --- Setup image upload for each specific category ---
+        // Residential Design
+        setupImageUpload('residential-design-upload-form', 'adminResidentialImageFile', 'adminResidentialImageTitle', 'adminResidentialImageDescription', 'residential-admin-message', 'residential-design');
+
+        // Commercial Design
+        setupImageUpload('commercial-design-upload-form', 'adminCommercialImageFile', 'adminCommercialImageTitle', 'adminCommercialImageDescription', 'commercial-admin-message', 'commercial-design');
+
+        // Space Planning
+        setupImageUpload('space-planning-upload-form', 'adminSpacePlanningImageFile', 'adminSpacePlanningImageTitle', 'adminSpacePlanningImageDescription', 'space-planning-admin-message', 'space-planning');
+
+        // Furniture & Decor Selection
+        setupImageUpload('furniture-decor-upload-form', 'adminFurnitureDecorImageFile', 'adminFurnitureDecorImageTitle', 'adminFurnitureDecorImageDescription', 'furniture-decor-admin-message', 'furniture-decor');
+
+        // Lighting Design
+        setupImageUpload('lighting-design-upload-form', 'adminLightingDesignImageFile', 'adminLightingDesignImageTitle', 'adminLightingDesignImageDescription', 'lighting-design-admin-message', 'lighting-design');
+
+        // Renovation & Remodeling
+        setupImageUpload('renovation-remodeling-upload-form', 'adminRenovationRemodelingImageFile', 'adminRenovationRemodelingImageTitle', 'adminRenovationRemodelingImageDescription', 'renovation-remodeling-admin-message', 'renovation-remodeling');
+
+        // Modern Living Room
+        setupImageUpload('modern-living-room-upload-form', 'adminModernLivingRoomImageFile', 'adminModernLivingRoomImageTitle', 'adminModernLivingRoomImageDescription', 'modern-living-room-admin-message', 'modern-living-room');
+
+        // Cozy Bedroom Retreat
+        setupImageUpload('cozy-bedroom-upload-form', 'adminCozyBedroomImageFile', 'adminCozyBedroomImageTitle', 'adminCozyBedroomImageDescription', 'cozy-bedroom-admin-message', 'cozy-bedroom-retreat');
+
+        // SS Design Avenue Culinary Space
+        setupImageUpload('ss-kitchen-upload-form', 'adminSsKitchenImageFile', 'adminSsKitchenImageTitle', 'adminSsKitchenImageDescription', 'ss-kitchen-admin-message', 'ss-design-avenue-culinary-space');
+
+        // Elegant Home Office
+        setupImageUpload('elegant-home-office-upload-form', 'adminElegantHomeOfficeImageFile', 'adminElegantHomeOfficeImageTitle', 'adminElegantHomeOfficeImageDescription', 'elegant-home-office-admin-message', 'elegant-home-office');
+
+        // Whimsical Nursery
+        setupImageUpload('whimsical-nursery-upload-form', 'adminWhimsicalNurseryImageFile', 'adminWhimsicalNurseryImageTitle', 'adminWhimsicalNurseryImageDescription', 'whimsical-nursery-admin-message', 'whimsical-nursery');
+
+        // Spacious Dining Area
+        setupImageUpload('spacious-dining-area-upload-form', 'adminSpaciousDiningAreaImageFile', 'adminSpaciousDiningAreaImageTitle', 'adminSpaciousDiningAreaImageDescription', 'spacious-dining-area-admin-message', 'spacious-dining-area');
+
 
         // Event listener for updating admin OTP contact (inside admin dashboard)
         updateAdminContactButton.addEventListener('click', () => {
@@ -787,17 +1318,92 @@
             }, 3000);
         });
 
+        // Event listeners for admin dashboard navigation buttons
+        showGeneralPortfolioUploadButton.addEventListener('click', () => showAdminForm('general-portfolio'));
+        showResidentialUploadButton.addEventListener('click', () => showAdminForm('residential-design'));
+        showCommercialUploadButton.addEventListener('click', () => showAdminForm('commercial-design'));
+        showSpacePlanningUploadButton.addEventListener('click', () => showAdminForm('space-planning'));
+        showFurnitureDecorUploadButton.addEventListener('click', () => showAdminForm('furniture-decor'));
+        showLightingDesignUploadButton.addEventListener('click', () => showAdminForm('lighting-design'));
+        showRenovationRemodelingUploadButton.addEventListener('click', () => showAdminForm('renovation-remodeling'));
+        showModernLivingRoomUploadButton.addEventListener('click', () => showAdminForm('modern-living-room'));
+        showCozyBedroomUploadButton.addEventListener('click', () => showAdminForm('cozy-bedroom'));
+        showSsKitchenUploadButton.addEventListener('click', () => showAdminForm('ss-kitchen'));
+        showElegantHomeOfficeUploadButton.addEventListener('click', () => showAdminForm('elegant-home-office'));
+        showWhimsicalNurseryUploadButton.addEventListener('click', () => showAdminForm('whimsical-nursery'));
+        showSpaciousDiningAreaUploadButton.addEventListener('click', () => showAdminForm('spacious-dining-area'));
+        showOtpContactUpdateButton.addEventListener('click', () => showAdminForm('otp-contact'));
+
+
+        // --- DELETE FUNCTIONALITY ---
+
+        // Function to delete a portfolio item by its image URL
+        function deletePortfolioItem(url) {
+            console.log('Attempting to delete item with URL:', url);
+            const initialLength = dynamicPortfolioItems.length;
+            dynamicPortfolioItems = dynamicPortfolioItems.filter(item => item.imageUrl !== url);
+            if (dynamicPortfolioItems.length < initialLength) {
+                console.log('Item deleted from array. New length:', dynamicPortfolioItems.length);
+                localStorage.setItem('ssDesignPortfolio', JSON.stringify(dynamicPortfolioItems));
+                renderPortfolio(); // Re-render the portfolio
+            } else {
+                console.log('Item not found in array or not deleted.');
+            }
+        }
+
+        // Event listener for the portfolio grid to handle clicks on delete buttons (event delegation)
+        document.getElementById('portfolio-grid').addEventListener('click', (event) => {
+            const deleteButton = event.target.closest('.delete-button');
+            if (deleteButton) {
+                console.log('Delete button clicked!');
+                imageUrlToDelete = deleteButton.dataset.imageUrl; // Store the URL for confirmation
+                console.log('Image URL to delete:', imageUrlToDelete);
+
+                // Show the confirmation modal
+                deleteConfirmationModal.classList.remove('hidden');
+                console.log('Delete confirmation modal should be visible.');
+            } else {
+                console.log('Click was not on a delete button.');
+            }
+        });
+
+        // Event listener for the "Confirm Delete" button in the modal
+        confirmDeleteButton.addEventListener('click', () => {
+            console.log('Confirm delete button clicked.');
+            if (imageUrlToDelete) {
+                deletePortfolioItem(imageUrlToDelete);
+                imageUrlToDelete = null; // Clear the stored URL
+                deleteConfirmationModal.classList.add('hidden'); // Hide the modal
+                console.log('Image deleted and modal hidden.');
+            }
+        });
+
+        // Event listener for the "Cancel Delete" button in the modal
+        cancelDeleteButton.addEventListener('click', () => {
+            console.log('Cancel delete button clicked.');
+            imageUrlToDelete = null; // Clear the stored URL
+            deleteConfirmationModal.classList.add('hidden'); // Hide the modal
+            console.log('Delete operation cancelled and modal hidden.');
+        });
+
+        // --- END DELETE FUNCTIONALITY ---
+
 
         // Initial calls when the page loads
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM Content Loaded. Initializing...');
             renderPortfolio();
             updateMainAdminButton(); // Update the text of the main admin button (Login/Logout)
-            updateAdminDashboardVisibility(); // Show/hide dashboard based on login status
+            updateAdminDashboardVisibility(); // Show/hide dashboard and default form based on login status
+
+            // Ensure the login modal and delete confirmation modal are hidden on initial load
+            adminLoginModal.classList.add('hidden');
+            deleteConfirmationModal.classList.add('hidden');
+            console.log('Initial setup complete.');
         });
 
 
         // Smooth scrolling for internal navigation links (header only)
-        // This will now apply only to the main navigation items that link to sections on index.html
         document.querySelectorAll('header nav a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -827,6 +1433,7 @@
             const isClickInsideMobileMenu = mobileMenu.contains(event.target);
             const isClickOnMobileMenuButton = mobileMenuButton.contains(event.target);
             const isClickInsideAdminLoginModal = adminLoginModal.contains(event.target);
+            const isClickInsideDeleteConfirmationModal = deleteConfirmationModal.contains(event.target); // New: Check for delete modal
             const isClickOnAdminToggleButton = adminToggleButton.contains(event.target) || mobileAdminToggleButton.contains(event.target);
 
             // Close mobile menu if open and click is outside it and its toggle button
@@ -836,9 +1443,16 @@
 
             // Close admin login modal if open and click is outside it and its toggle button,
             // but not if already logged in (as the main admin toggle button handles logout then)
-            if (!isLoggedIn && !adminLoginModal.classList.contains('hidden') && !isClickInsideAdminLoginModal && !isClickOnAdminToggleButton) {
+            if (!isLoggedIn && !adminLoginModal.classList.contains('hidden') && !isClickInsideAdminLoginModal && !isClickOnAdminToggleButton && event.target.id !== 'login-modal-message') {
                  adminLoginModal.classList.add('hidden');
                  resetLoginModal(); // Also reset fields when closed by clicking outside
+            }
+
+            // Close delete confirmation modal if open and click is outside it
+            if (!deleteConfirmationModal.classList.contains('hidden') && !isClickInsideDeleteConfirmationModal && !event.target.closest('.delete-button')) { // Added !event.target.closest('.delete-button')
+                deleteConfirmationModal.classList.add('hidden');
+                imageUrlToDelete = null; // Clear the stored URL
+                console.log('Delete confirmation modal hidden by outside click.');
             }
         });
 
