@@ -14,12 +14,118 @@
             background-color: #000000;
             color: #facc15;
         }
+        /* Custom scrollbar for a nicer look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a; /* Darker scrollbar track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ca8a04; /* Gold scrollbar thumb (amber-600) */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308; /* Darker gold on hover */
+        }
         .section-heading {
             font-size: 2.5rem;
             font-weight: 700;
             color: #facc15;
             margin-bottom: 2.5rem;
             text-align: center;
+        }
+
+        /* Styling for the modal overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Above everything else */
+        }
+        /* Ensure the 'hidden' class truly hides the modal */
+        .modal-overlay.hidden {
+            display: none !important;
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            width: 400px;
+            color: #facc15;
+            position: relative;
+            animation: fadeInScale 0.3s ease-out;
+        }
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Style for the file input wrapper (for upload forms) */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            border: 2px dashed #ca8a04; /* amber-600 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem 1.5rem; /* px-6 py-3 */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            color: #facc15; /* yellow-400 */
+            font-weight: 600; /* font-semibold */
+            text-align: center;
+        }
+        .file-input-wrapper:hover {
+            background-color: #333333; /* Darker gray on hover */
+            border-color: #eab308; /* yellow-500 */
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Styling for the delete button on portfolio items */
+        .delete-button {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            border-radius: 9999px; /* full rounded */
+            padding: 0.5rem; /* p-2 */
+            font-size: 0.75rem; /* text-xs */
+            transition: background-color 0.2s ease-in-out;
+            position: absolute; /* positioned relative to its parent .dynamic-portfolio-item */
+            top: 0.5rem; /* Adjust as needed */
+            right: 0.5rem; /* Adjust as needed */
+            z-index: 10; /* Ensure it's above the image/text */
+            display: flex; /* To center SVG icon if present */
+            align-items: center;
+            justify-content: center;
+        }
+        .delete-button:hover {
+            background-color: #dc2626; /* red-600 */
+        }
+        /* Make sure the parent of the delete button is relative */
+        .dynamic-portfolio-item {
+            position: relative;
         }
     </style>
 </head>
@@ -33,6 +139,10 @@
                 <a href="index.html#portfolio" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">Portfolio</a>
                 <a href="index.html#testimonials" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">Testimonials</a>
                 <a href="index.html#contact" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">Contact</a>
+                <!-- Admin login/logout button in header for quick access -->
+                <button id="admin-toggle-button" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">
+                    Admin Login
+                </button>
             </div>
             <button id="mobile-menu-button" class="md:hidden focus:outline-none">
                 <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -44,6 +154,9 @@
             <a href="index.html#portfolio" class="block px-6 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition duration-300 font-medium">Portfolio</a>
             <a href="index.html#testimonials" class="block px-6 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition duration-300 font-medium">Testimonials</a>
             <a href="index.html#contact" class="block px-6 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition duration-300 font-medium">Contact</a>
+            <button id="mobile-admin-toggle-button" class="block w-full text-left px-6 py-3 text-gray-300 hover:bg-gray-700 rounded-lg transition duration-300 font-medium">
+                Admin Login
+            </button>
         </div>
     </header>
 
@@ -64,8 +177,41 @@
                 Back to Services
             </a>
         </div>
+
+        <!-- Residential Design Specific Portfolio Section -->
+        <section id="residential-gallery" class="py-16 md:py-24 bg-gray-800 rounded-lg mx-4 md:mx-auto max-w-7xl mt-8 px-6 md:px-12">
+            <div class="container mx-auto">
+                <h2 class="section-heading text-yellow-400">Residential Design Gallery</h2>
+                <div id="residential-portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Residential design images will be dynamically loaded here by JavaScript -->
+                    <p id="no-images-message" class="col-span-full text-center text-gray-400">No residential design images available yet. Check back soon!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Image Upload Form (Admin-only) -->
+        <section id="admin-residential-upload-section" class="py-16 md:py-24 bg-gray-900 rounded-lg mx-4 md:mx-auto max-w-xl mt-8 px-6 md:px-12 hidden">
+            <h2 class="text-2xl font-semibold text-yellow-400 mb-4 text-center">Upload Residential Design Image</h2>
+            <p class="text-gray-400 text-sm mb-4 text-center">
+                Add a new image specifically for Residential Design projects.
+            </p>
+            <div class="space-y-4">
+                <label for="residentialImageFile" class="file-input-wrapper block mx-auto">
+                    <span>Select Image File</span>
+                    <input type="file" id="residentialImageFile" accept="image/*">
+                </label>
+                <input type="text" id="residentialImageTitle" placeholder="Image Title (e.g., Modern Apartment Living)" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                <textarea id="residentialImageDescription" rows="3" placeholder="A brief description of the design." class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400"></textarea>
+                <button id="add-residential-image-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                    Add Residential Image
+                </button>
+            </div>
+            <p id="residential-upload-message" class="text-center mt-4 text-sm text-red-400"></p>
+        </section>
+
     </main>
 
+    <!-- Footer Section -->
     <footer class="bg-gray-900 text-gray-300 py-10 px-6 rounded-t-lg">
         <div class="container mx-auto text-center md:flex md:justify-between md:items-center">
             <div class="mb-4 md:mb-0">
@@ -77,7 +223,455 @@
             </div>
         </div>
     </footer>
+
+    <!-- Admin Login Modal (Copied from index.html) -->
+    <div id="admin-login-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal-button" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            <h2 class="text-3xl font-bold text-yellow-400 mb-6 text-center">Admin Login</h2>
+
+            <!-- Login Form -->
+            <div id="login-form-container" class="space-y-6">
+                <div>
+                    <label for="loginIdentifier" class="block text-lg font-medium text-gray-300 mb-2">Username/Email/Phone</label>
+                    <input type="text" id="loginIdentifier" placeholder="87220 58888 or ssenterprises666666@gmail.com" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                </div>
+                <div id="password-field">
+                    <label for="loginPassword" class="block text-lg font-medium text-gray-300 mb-2">Password</label>
+                    <input type="password" id="loginPassword" placeholder="RAJU@$1234" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                </div>
+                <button id="login-password-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                    Login with Password
+                </button>
+                <div class="text-center text-gray-400 my-4">OR</div>
+                <button id="send-otp-button" class="w-full bg-indigo-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-indigo-700 transition duration-300">
+                    Send OTP
+                </button>
+
+                <!-- OTP Verification Field (Initially Hidden) -->
+                <div id="otp-verification-field" class="hidden mt-4 space-y-4">
+                    <p class="text-red-400 text-sm text-center">**SIMULATION: OTP is displayed here, not sent. For real OTP, a backend is needed.**</p>
+                    <p id="simulated-otp-display" class="text-yellow-400 font-bold text-xl text-center mb-4"></p>
+                    <div>
+                        <label for="otpInput" class="block text-lg font-medium text-gray-300 mb-2">Enter OTP</label>
+                        <input type="text" id="otpInput" placeholder="Enter the 6-digit OTP" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                    </div>
+                    <button id="verify-otp-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                        Verify OTP
+                    </button>
+                </div>
+            </div>
+            <p id="login-modal-message" class="text-center mt-4 text-sm text-red-400"></p>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal (Copied from index.html) -->
+    <div id="delete-confirmation-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4 text-center">Confirm Deletion</h2>
+            <p class="text-gray-300 text-center mb-6">Are you sure you want to delete this image?</p>
+            <div class="flex justify-center gap-4">
+                <button id="confirm-delete-button" class="bg-red-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-red-700 transition duration-300">
+                    Delete
+                </button>
+                <button id="cancel-delete-button" class="bg-gray-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-gray-700 transition duration-300">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // --- Admin Credentials (Hardcoded - INSECURE for production) ---
+        // For password login:
+        const ADMIN_PASSWORD_PASS = 'RAJU@$1234';
+
+        // Admin identifiers that can be used with the password
+        const ADMIN_IDENTIFIERS_PASS = ['8722058888', 'ssenterprises666666@gmail.com']; // Note: phone number without spaces for consistent comparison
+
+        // For simulated OTP login:
+        // Load initial admin OTP contact from localStorage, or use default
+        let adminOtpContact = localStorage.getItem('adminOtpContact') || '+918722058888'; // Phone number without spaces for consistency
+        const SIMULATED_OTP = '123456'; // This OTP will be "sent" (displayed)
+
+        // Initialize isLoggedIn based on localStorage. If 'true', it's true, otherwise false.
+        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        // Get elements for Admin Login
+        const adminToggleButton = document.getElementById('admin-toggle-button');
+        const mobileAdminToggleButton = document.getElementById('mobile-admin-toggle-button');
+        const adminLoginModal = document.getElementById('admin-login-modal');
+        const closeModalButton = document.getElementById('close-modal-button');
+        const loginIdentifierInput = document.getElementById('loginIdentifier');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const loginPasswordButton = document.getElementById('login-password-button');
+        const sendOtpButton = document.getElementById('send-otp-button');
+        const otpVerificationField = document.getElementById('otp-verification-field');
+        const simulatedOtpDisplay = document.getElementById('simulated-otp-display');
+        const otpInput = document.getElementById('otpInput');
+        const verifyOtpButton = document.getElementById('verify-otp-button');
+        const loginModalMessage = document.getElementById('login-modal-message');
+
+        // Get elements for Image Upload and Gallery
+        const residentialImageFile = document.getElementById('residentialImageFile');
+        const residentialImageTitle = document.getElementById('residentialImageTitle');
+        const residentialImageDescription = document.getElementById('residentialImageDescription');
+        const addResidentialImageButton = document.getElementById('add-residential-image-button');
+        const residentialUploadMessage = document.getElementById('residential-upload-message');
+        const residentialUploadSection = document.getElementById('admin-residential-upload-section'); // The entire upload form section
+        const residentialPortfolioGrid = document.getElementById('residential-portfolio-grid');
+        const noImagesMessage = document.getElementById('no-images-message');
+
+        // Delete Confirmation Modal elements
+        const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
+        const confirmDeleteButton = document.getElementById('confirm-delete-button');
+        const cancelDeleteButton = document.getElementById('cancel-delete-button');
+        let imageUrlToDelete = null; // Variable to store the URL of the image to be deleted
+
+
+        // --- Functions for Admin Login (Copied from index.html) ---
+
+        // Function to update the text of the main admin login/logout buttons
+        function updateMainAdminButton() {
+            if (isLoggedIn) {
+                adminToggleButton.textContent = 'Admin Logout';
+                mobileAdminToggleButton.textContent = 'Admin Logout';
+            } else {
+                adminToggleButton.textContent = 'Admin Login';
+                mobileAdminToggleButton.textContent = 'Admin Login';
+            }
+        }
+
+        // Function to show/hide the admin image upload section based on login status
+        function updateAdminUploadVisibility() {
+            if (isLoggedIn) {
+                residentialUploadSection.classList.remove('hidden');
+            } else {
+                residentialUploadSection.classList.add('hidden');
+            }
+        }
+
+        // Function to clear and reset login modal fields and messages
+        function resetLoginModal() {
+            loginModalMessage.textContent = ''; // Clear message
+            loginModalMessage.classList.remove('text-green-400', 'text-red-400');
+            otpVerificationField.classList.add('hidden'); // Hide OTP field
+            simulatedOtpDisplay.textContent = ''; // Clear simulated OTP
+            otpInput.value = ''; // Clear OTP input
+            loginIdentifierInput.value = ''; // Clear identifier input
+            loginPasswordInput.value = ''; // Clear password input
+            // Make sure password field is visible when resetting (in case it was hidden for OTP)
+            document.getElementById('password-field').classList.remove('hidden');
+            document.getElementById('login-password-button').classList.remove('hidden');
+            sendOtpButton.classList.remove('hidden');
+        }
+
+        // --- Event Listeners for Admin Login (Copied from index.html) ---
+
+        // Event listener for the main Admin Login/Logout button in the header
+        adminToggleButton.addEventListener('click', () => {
+            if (isLoggedIn) {
+                // If currently logged in, perform logout
+                isLoggedIn = false;
+                localStorage.setItem('isLoggedIn', 'false'); // Clear login state in local storage
+                updateMainAdminButton(); // Update button text to "Admin Login"
+                updateAdminUploadVisibility(); // Hide the admin upload section
+                // Ensure modal is hidden on logout
+                adminLoginModal.classList.add('hidden');
+                console.log("Logged out successfully."); // For debugging
+                renderResidentialPortfolio(); // Re-render portfolio to hide delete buttons
+            } else {
+                // If not logged in, show the login modal
+                resetLoginModal(); // Reset modal before showing
+                adminLoginModal.classList.remove('hidden');
+            }
+        });
+
+        // Event listener for the mobile Admin Login/Logout button
+        mobileAdminToggleButton.addEventListener('click', () => {
+            if (isLoggedIn) {
+                isLoggedIn = false;
+                localStorage.setItem('isLoggedIn', 'false');
+                updateMainAdminButton();
+                updateAdminUploadVisibility();
+                adminLoginModal.classList.add('hidden'); // Ensure modal is hidden on mobile logout
+                console.log("Logged out successfully (mobile)."); // For debugging
+                renderResidentialPortfolio(); // Re-render portfolio to hide delete buttons
+            } else {
+                resetLoginModal();
+                adminLoginModal.classList.remove('hidden');
+            }
+            mobileMenu.classList.add('hidden'); // Always close mobile menu after this button is pressed
+        });
+
+        // Event listener for closing the admin login modal
+        closeModalButton.addEventListener('click', () => {
+            adminLoginModal.classList.add('hidden'); // Hide the modal
+            resetLoginModal(); // Clear and reset fields
+        });
+
+        // Event listener for "Login with Password" button inside the modal
+        loginPasswordButton.addEventListener('click', () => {
+            const identifier = loginIdentifierInput.value.trim();
+            const password = loginPasswordInput.value.trim();
+
+            // Normalize phone number by removing spaces for comparison
+            const normalizedIdentifier = identifier.replace(/\s/g, '');
+
+            // Check if identifier matches one of the allowed admin identifiers and password
+            if (ADMIN_IDENTIFIERS_PASS.includes(normalizedIdentifier) && password === ADMIN_PASSWORD_PASS) {
+                isLoggedIn = true;
+                localStorage.setItem('isLoggedIn', 'true');
+                loginModalMessage.textContent = 'Login successful!';
+                loginModalMessage.classList.remove('text-red-400');
+                loginModalMessage.classList.add('text-green-400');
+
+                // After a short delay, hide the modal and update main UI
+                setTimeout(() => {
+                    adminLoginModal.classList.add('hidden');
+                    updateMainAdminButton();
+                    updateAdminUploadVisibility(); // Show upload section
+                    renderResidentialPortfolio(); // Re-render portfolio to show delete buttons
+                    resetLoginModal(); // Clear inputs for next time
+                }, 500); // Small delay for message visibility
+            } else {
+                loginModalMessage.textContent = 'Invalid username/email/phone or password.';
+                loginModalMessage.classList.remove('text-green-400');
+                loginModalMessage.classList.add('text-red-400');
+            }
+        });
+
+        // Event listener for "Send OTP" button inside the modal
+        sendOtpButton.addEventListener('click', () => {
+            const identifier = loginIdentifierInput.value.trim();
+            // Normalize phone number by removing spaces for comparison
+            const normalizedIdentifier = identifier.replace(/\s/g, '');
+
+            if (normalizedIdentifier === adminOtpContact.replace(/\s/g, '')) { // Compare normalized contacts
+                simulatedOtpDisplay.textContent = `Your OTP: ${SIMULATED_OTP}`; // Display simulated OTP
+                otpVerificationField.classList.remove('hidden'); // Show OTP input field
+                loginModalMessage.textContent = 'OTP generated! (Check above)';
+                loginModalMessage.classList.remove('text-red-400');
+                loginModalMessage.classList.add('text-green-400');
+                // Hide password related fields
+                document.getElementById('password-field').classList.add('hidden');
+                loginPasswordButton.classList.add('hidden');
+                sendOtpButton.classList.add('hidden'); // Hide send OTP button after sending
+            } else {
+                loginModalMessage.textContent = 'Invalid phone number/email for OTP.';
+                loginModalMessage.classList.remove('text-green-400');
+                loginModalMessage.classList.add('text-red-400');
+                otpVerificationField.classList.add('hidden'); // Hide OTP field if identifier is wrong
+            }
+        });
+
+        // Event listener for "Verify OTP" button inside the modal
+        verifyOtpButton.addEventListener('click', () => {
+            const otpEntered = otpInput.value.trim();
+
+            if (otpEntered === SIMULATED_OTP) {
+                isLoggedIn = true;
+                localStorage.setItem('isLoggedIn', 'true');
+                loginModalMessage.textContent = 'OTP verified! Login successful!';
+                loginModalMessage.classList.remove('text-red-400');
+                loginModalMessage.classList.add('text-green-400');
+
+                // After a short delay, hide the modal and update main UI
+                setTimeout(() => {
+                    adminLoginModal.classList.add('hidden');
+                    updateMainAdminButton();
+                    updateAdminUploadVisibility(); // Show upload section
+                    renderResidentialPortfolio(); // Re-render portfolio to show delete buttons
+                    resetLoginModal(); // Clear inputs for next time
+                }, 500); // Small delay for message visibility
+            } else {
+                loginModalMessage.textContent = 'Invalid OTP. Please try again.';
+                loginModalMessage.classList.remove('text-green-400');
+                loginModalMessage.classList.add('text-red-400');
+            }
+        });
+
+        // --- Functions for Residential Design Image Management ---
+
+        // Array to store all dynamic portfolio items (from index.html admin panel)
+        let dynamicPortfolioItems = [];
+        if (localStorage.getItem('ssDesignPortfolio')) {
+            try {
+                dynamicPortfolioItems = JSON.parse(localStorage.getItem('ssDesignPortfolio'));
+            } catch (e) {
+                console.error("Error parsing dynamic portfolio data from localStorage:", e);
+                localStorage.removeItem('ssDesignPortfolio'); // Clear corrupt data
+            }
+        }
+
+        // Function to filter and render only 'residential-design' tagged images
+        function renderResidentialPortfolio() {
+            const residentialImages = dynamicPortfolioItems.filter(item => item.type === 'residential-design');
+            residentialPortfolioGrid.innerHTML = ''; // Clear existing items
+
+            if (residentialImages.length === 0) {
+                noImagesMessage.classList.remove('hidden');
+            } else {
+                noImagesMessage.classList.add('hidden');
+                residentialImages.forEach(item => {
+                    const portfolioCard = `
+                        <div class="bg-gray-700 rounded-xl shadow-md overflow-hidden transform hover:scale-102 transition duration-300 dynamic-portfolio-item relative">
+                            <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Error';">
+                            <div class="p-4">
+                                <h3 class="text-xl font-semibold text-yellow-400 mb-2">${item.title}</h3>
+                                <p class="text-gray-300 text-sm">${item.description}</p>
+                            </div>
+                            ${isLoggedIn ? `
+                                <button class="delete-button" data-image-url="${item.imageUrl}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    residentialPortfolioGrid.innerHTML += portfolioCard;
+                });
+            }
+        }
+
+        // Event listener for adding residential images
+        addResidentialImageButton.addEventListener('click', () => {
+            if (!isLoggedIn) {
+                residentialUploadMessage.textContent = 'You must be logged in as an admin to add photos.';
+                residentialUploadMessage.classList.add('text-red-400');
+                residentialUploadMessage.classList.remove('text-green-400');
+                return;
+            }
+
+            const file = residentialImageFile.files[0];
+            const title = residentialImageTitle.value.trim();
+            const description = residentialImageDescription.value.trim();
+
+            if (!file) {
+                residentialUploadMessage.textContent = 'Please select an image file.';
+                residentialUploadMessage.classList.add('text-red-400');
+                residentialUploadMessage.classList.remove('text-green-400');
+                return;
+            }
+            if (!title) {
+                residentialUploadMessage.textContent = 'Please enter an image title.';
+                residentialUploadMessage.classList.add('text-red-400');
+                residentialUploadMessage.classList.remove('text-green-400');
+                return;
+            }
+
+            residentialUploadMessage.textContent = ''; // Clear previous message
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const imageData = {
+                    imageUrl: e.target.result, // Base64 data URL
+                    title: title,
+                    description: description || 'No description provided.',
+                    type: 'residential-design' // Assign the specific type
+                };
+                dynamicPortfolioItems.push(imageData); // Add to dynamic portfolio (all images)
+                localStorage.setItem('ssDesignPortfolio', JSON.stringify(dynamicPortfolioItems)); // Save all images
+                renderResidentialPortfolio(); // Re-render only residential images
+                residentialUploadMessage.textContent = 'Residential image added successfully!';
+                residentialUploadMessage.classList.remove('text-red-400');
+                residentialUploadMessage.classList.add('text-green-400');
+
+                // Clear input fields after display
+                residentialImageFile.value = ''; // Clear the file input
+                residentialImageTitle.value = '';
+                residentialImageDescription.value = '';
+
+                setTimeout(() => {
+                    residentialUploadMessage.textContent = '';
+                    residentialUploadMessage.classList.remove('text-green-400');
+                }, 3000);
+            };
+
+            reader.onerror = function() {
+                residentialUploadMessage.textContent = 'Failed to read image file.';
+                residentialUploadMessage.classList.add('text-red-400');
+            };
+
+            reader.readAsDataURL(file); // Read the file as a Base64 data URL
+        });
+
+        // Function to delete a portfolio item by its image URL
+        function deletePortfolioItem(url) {
+            console.log('Attempting to delete item with URL:', url);
+            const initialLength = dynamicPortfolioItems.length;
+            dynamicPortfolioItems = dynamicPortfolioItems.filter(item => item.imageUrl !== url);
+            if (dynamicPortfolioItems.length < initialLength) {
+                console.log('Item deleted from array. New length:', dynamicPortfolioItems.length);
+                localStorage.setItem('ssDesignPortfolio', JSON.stringify(dynamicPortfolioItems));
+                renderResidentialPortfolio(); // Re-render the residential portfolio
+            } else {
+                console.log('Item not found in array or not deleted.');
+            }
+        }
+
+        // Event listener for the residential portfolio grid to handle clicks on delete buttons (event delegation)
+        residentialPortfolioGrid.addEventListener('click', (event) => {
+            const deleteButton = event.target.closest('.delete-button');
+            if (deleteButton) {
+                console.log('Delete button clicked on residential page!');
+                imageUrlToDelete = deleteButton.dataset.imageUrl; // Store the URL for confirmation
+                console.log('Image URL to delete:', imageUrlToDelete);
+
+                // Show the confirmation modal
+                deleteConfirmationModal.classList.remove('hidden');
+                console.log('Delete confirmation modal should be visible.');
+            } else {
+                console.log('Click was not on a delete button.');
+            }
+        });
+
+        // Event listener for the "Confirm Delete" button in the modal
+        confirmDeleteButton.addEventListener('click', () => {
+            console.log('Confirm delete button clicked.');
+            if (imageUrlToDelete) {
+                deletePortfolioItem(imageUrlToDelete);
+                imageUrlToDelete = null; // Clear the stored URL
+                deleteConfirmationModal.classList.add('hidden'); // Hide the modal
+                console.log('Image deleted and modal hidden.');
+            }
+        });
+
+        // Event listener for the "Cancel Delete" button in the modal
+        cancelDeleteButton.addEventListener('click', () => {
+            console.log('Cancel delete button clicked.');
+            imageUrlToDelete = null; // Clear the stored URL
+            deleteConfirmationModal.classList.add('hidden'); // Hide the modal
+            console.log('Delete operation cancelled and modal hidden.');
+        });
+
+        // --- END DELETE FUNCTIONALITY ---
+
+
+        // Initial calls when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Residential Design page loaded. Initializing...');
+            renderResidentialPortfolio(); // Display residential images
+            updateMainAdminButton(); // Update the text of the main admin button (Login/Logout)
+            updateAdminUploadVisibility(); // Show/hide upload form based on login status
+
+            // Ensure modals are hidden on initial load
+            adminLoginModal.classList.add('hidden');
+            deleteConfirmationModal.classList.add('hidden');
+            console.log('Initial setup complete.');
+        });
+
+
+        // Smooth scrolling for internal navigation links (header only)
+        document.querySelectorAll('header nav a[href^="index.html#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // For links pointing to index.html with a hash, just navigate normally
+                // The index.html page will handle its own scrolling on load.
+            });
+        });
+
         // Mobile menu toggle functionality
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -86,15 +680,43 @@
             mobileMenu.classList.toggle('hidden');
         });
 
-        // Close mobile menu when clicking outside
+        // Close mobile menu and admin login modal when clicking outside (improved for UX)
         document.addEventListener('click', function(event) {
             const isClickInsideMobileMenu = mobileMenu.contains(event.target);
             const isClickOnMobileMenuButton = mobileMenuButton.contains(event.target);
+            const isClickInsideAdminLoginModal = adminLoginModal.contains(event.target);
+            const isClickInsideDeleteConfirmationModal = deleteConfirmationModal.contains(event.target);
+            const isClickOnAdminToggleButton = adminToggleButton.contains(event.target) || mobileAdminToggleButton.contains(event.target);
 
-            if (!isClickInsideMobileMenu && !isClickOnMobileMenuButton && !mobileMenu.classList.contains('hidden')) {
+            // Close mobile menu if open and click is outside it and its toggle button
+            if (!mobileMenu.classList.contains('hidden') && !isClickInsideMobileMenu && !isClickOnMobileMenuButton) {
                 mobileMenu.classList.add('hidden');
+            }
+
+            // Close admin login modal if open and click is outside it and its toggle button,
+            // but not if already logged in (as the main admin toggle button handles logout then)
+            if (!isLoggedIn && !adminLoginModal.classList.contains('hidden') && !isClickInsideAdminLoginModal && !isClickOnAdminToggleButton && event.target.id !== 'login-modal-message') {
+                 adminLoginModal.classList.add('hidden');
+                 resetLoginModal(); // Also reset fields when closed by clicking outside
+            }
+
+            // Close delete confirmation modal if open and click is outside it
+            if (!deleteConfirmationModal.classList.contains('hidden') && !isClickInsideDeleteConfirmationModal && !event.target.closest('.delete-button')) {
+                deleteConfirmationModal.classList.add('hidden');
+                imageUrlToDelete = null; // Clear the stored URL
+                console.log('Delete confirmation modal hidden by outside click.');
+            }
+        });
+
+        // Sticky header behavior (optional)
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { // Adjust value as needed
+                header.classList.add('shadow-lg');
+            } else {
+                header.classList.remove('shadow-lg');
             }
         });
     </script>
 </body>
-</html>
+</html>	
