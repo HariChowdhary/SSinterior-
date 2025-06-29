@@ -51,7 +51,7 @@
                 <a href="#testimonials" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">Testimonials</a>
                 <a href="#contact" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">Contact</a>
                 <!-- Admin login/logout button in header for quick access -->
-                <button id="admin-toggle-button" class="text-gray-300 hover:text-red-500 transition duration-300 font-medium text-lg">
+                <button id="admin-toggle-button" class="text-gray-300 hover:text-yellow-400 transition duration-300 font-medium text-lg">
                     Admin Login
                 </button>
             </div>
@@ -197,12 +197,30 @@
             </div>
         </section>
 
-        <!-- Admin Panel (Hidden by default) -->
+        <!-- Admin Panel (Login or Photo Management) -->
         <section id="admin-panel" class="py-16 md:py-24 bg-gray-800 rounded-lg mx-4 md:mx-auto max-w-7xl mt-8 px-6 md:px-12 hidden">
             <div class="container mx-auto">
-                <h2 class="section-heading text-yellow-400">Admin Photo Management</h2>
-                <div class="max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg">
-                    <p class="text-gray-300 text-center mb-6">Add new portfolio images (URL based only).</p>
+                <h2 class="section-heading text-yellow-400">Admin Area</h2>
+                <div id="admin-login-form" class="max-w-md mx-auto bg-gray-900 p-8 rounded-xl shadow-lg hidden">
+                    <p class="text-gray-300 text-center mb-6">Admin Login</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="adminUsername" class="block text-lg font-medium text-gray-300 mb-2">Username</label>
+                            <input type="text" id="adminUsername" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        </div>
+                        <div>
+                            <label for="adminPassword" class="block text-lg font-medium text-gray-300 mb-2">Password</label>
+                            <input type="password" id="adminPassword" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white focus:ring-yellow-400 focus:border-yellow-400">
+                        </div>
+                        <button id="admin-login-button" class="w-full bg-yellow-400 text-black font-semibold px-6 py-3 rounded-full hover:bg-yellow-500 transition duration-300">
+                            Login
+                        </button>
+                    </div>
+                    <p id="login-message" class="text-center mt-4 text-sm text-red-400"></p>
+                </div>
+
+                <div id="admin-photo-management" class="max-w-xl mx-auto bg-gray-900 p-8 rounded-xl shadow-lg hidden">
+                    <p class="text-gray-300 text-center mb-6">Add New Portfolio Images (URL based only)</p>
                     <div class="space-y-4">
                         <div>
                             <label for="imageUrl" class="block text-lg font-medium text-gray-300 mb-2">Image URL</label>
@@ -336,6 +354,10 @@
     </footer>
 
     <script>
+        // --- Admin Credentials (Hardcoded - INSECURE for production) ---
+        const ADMIN_USERNAME = '9963364015';
+        const ADMIN_PASSWORD = 'Hari@$1811'; // Replace with a stronger password for local testing if you wish
+
         // Array to store portfolio items
         let portfolioItems = [
             { imageUrl: "https://placehold.co/600x400/000000/facc15?text=Modern+Living", title: "Modern Living Room", description: "Minimalist design with vibrant accents, focusing on comfort and light." },
@@ -351,7 +373,12 @@
 
         // Load portfolio items from localStorage if available
         if (localStorage.getItem('ssDesignPortfolio')) {
-            portfolioItems = JSON.parse(localStorage.getItem('ssDesignPortfolio'));
+            try {
+                portfolioItems = JSON.parse(localStorage.getItem('ssDesignPortfolio'));
+            } catch (e) {
+                console.error("Error parsing portfolio data from localStorage:", e);
+                localStorage.removeItem('ssDesignPortfolio'); // Clear corrupt data
+            }
         }
 
         // Function to render portfolio items
@@ -374,11 +401,18 @@
         }
 
         // Admin functionality
-        let isAdmin = localStorage.getItem('isAdmin') === 'true'; // Check localStorage for admin status
+        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Check localStorage for login status
 
         const adminToggleButton = document.getElementById('admin-toggle-button');
         const mobileAdminToggleButton = document.getElementById('mobile-admin-toggle-button');
         const adminPanel = document.getElementById('admin-panel');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const adminPhotoManagement = document.getElementById('admin-photo-management');
+        const adminLoginButton = document.getElementById('admin-login-button');
+        const adminUsernameInput = document.getElementById('adminUsername');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const loginMessage = document.getElementById('login-message');
+
         const addPhotoButton = document.getElementById('add-photo-button');
         const imageUrlInput = document.getElementById('imageUrl');
         const imageTitleInput = document.getElementById('imageTitle');
@@ -386,71 +420,109 @@
         const adminMessage = document.getElementById('admin-message');
 
         function updateAdminUI() {
-            if (isAdmin) {
+            if (isLoggedIn) {
                 adminToggleButton.textContent = 'Admin Logout';
                 mobileAdminToggleButton.textContent = 'Admin Logout';
-                adminToggleButton.classList.remove('hover:text-red-500'); // Remove red on hover for login state
-                adminToggleButton.classList.add('hover:text-gray-500'); // Add softer hover for logout state
-                mobileAdminToggleButton.classList.remove('hover:text-red-500');
-                mobileAdminToggleButton.classList.add('hover:bg-gray-700'); // Mobile specific hover
                 adminPanel.classList.remove('hidden');
+                adminLoginForm.classList.add('hidden');
+                adminPhotoManagement.classList.remove('hidden');
             } else {
                 adminToggleButton.textContent = 'Admin Login';
                 mobileAdminToggleButton.textContent = 'Admin Login';
-                adminToggleButton.classList.remove('hover:text-gray-500');
-                adminToggleButton.classList.add('hover:text-red-500');
-                mobileAdminToggleButton.classList.remove('hover:bg-gray-700');
-                mobileAdminToggleButton.classList.add('hover:text-red-500');
-                adminPanel.classList.add('hidden');
+                adminPanel.classList.remove('hidden'); // Show panel container
+                adminLoginForm.classList.remove('hidden'); // Show login form
+                adminPhotoManagement.classList.add('hidden'); // Hide photo management
             }
         }
 
         adminToggleButton.addEventListener('click', () => {
-            isAdmin = !isAdmin;
-            localStorage.setItem('isAdmin', isAdmin); // Persist admin state
+            if (isLoggedIn) {
+                isLoggedIn = false;
+                localStorage.setItem('isLoggedIn', 'false'); // Clear login state
+                adminMessage.textContent = ''; // Clear photo add message
+                loginMessage.textContent = 'Logged out successfully.'; // Provide logout feedback
+                loginMessage.classList.remove('text-red-400');
+                loginMessage.classList.add('text-green-400');
+            } else {
+                loginMessage.textContent = ''; // Clear previous login messages
+                // If not logged in, clicking the button reveals the panel and login form
+            }
             updateAdminUI();
             if (mobileMenu.classList.contains('hidden')) { // Close mobile menu if desktop button clicked
                  mobileMenu.classList.add('hidden');
             }
-            adminMessage.textContent = ''; // Clear any previous messages
         });
 
         mobileAdminToggleButton.addEventListener('click', () => {
-            isAdmin = !isAdmin;
-            localStorage.setItem('isAdmin', isAdmin); // Persist admin state
+            if (isLoggedIn) {
+                isLoggedIn = false;
+                localStorage.setItem('isLoggedIn', 'false'); // Clear login state
+                adminMessage.textContent = ''; // Clear photo add message
+                loginMessage.textContent = 'Logged out successfully.'; // Provide logout feedback
+                loginMessage.classList.remove('text-red-400');
+                loginMessage.classList.add('text-green-400');
+            } else {
+                loginMessage.textContent = ''; // Clear previous login messages
+            }
             updateAdminUI();
             mobileMenu.classList.add('hidden'); // Close mobile menu after toggle
-            adminMessage.textContent = ''; // Clear any previous messages
         });
 
+        adminLoginButton.addEventListener('click', () => {
+            const username = adminUsernameInput.value.trim();
+            const password = adminPasswordInput.value.trim();
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                isLoggedIn = true;
+                localStorage.setItem('isLoggedIn', 'true'); // Persist login state
+                loginMessage.textContent = 'Login successful!';
+                loginMessage.classList.remove('text-red-400');
+                loginMessage.classList.add('text-green-400');
+                adminUsernameInput.value = ''; // Clear fields
+                adminPasswordInput.value = '';
+                updateAdminUI();
+            } else {
+                loginMessage.textContent = 'Invalid username or password.';
+                loginMessage.classList.remove('text-green-400');
+                loginMessage.classList.add('text-red-400');
+            }
+        });
 
         addPhotoButton.addEventListener('click', () => {
+            if (!isLoggedIn) {
+                adminMessage.textContent = 'You must be logged in as an admin to add photos.';
+                adminMessage.classList.add('text-red-400');
+                adminMessage.classList.remove('text-green-400');
+                return;
+            }
+
             const url = imageUrlInput.value.trim();
             const title = imageTitleInput.value.trim();
             const description = imageDescriptionInput.value.trim();
 
             if (!url || !title) {
                 adminMessage.textContent = 'Image URL and Title are required.';
+                adminMessage.classList.add('text-red-400');
+                adminMessage.classList.remove('text-green-400');
                 return;
             }
 
             const newItem = {
                 imageUrl: url,
                 title: title,
-                description: description || 'No description provided.' // Default description
+                description: description || 'No description provided.'
             };
 
             portfolioItems.push(newItem);
-            localStorage.setItem('ssDesignPortfolio', JSON.stringify(portfolioItems)); // Save to localStorage
-            renderPortfolio(); // Re-render the portfolio
+            localStorage.setItem('ssDesignPortfolio', JSON.stringify(portfolioItems));
+            renderPortfolio();
             adminMessage.textContent = 'Photo added successfully!';
             adminMessage.classList.remove('text-red-400');
             adminMessage.classList.add('text-green-400');
-            imageUrlInput.value = ''; // Clear form fields
+            imageUrlInput.value = '';
             imageTitleInput.value = '';
             imageDescriptionInput.value = '';
 
-            // Clear message after a few seconds
             setTimeout(() => {
                 adminMessage.textContent = '';
                 adminMessage.classList.remove('text-green-400');
@@ -462,7 +534,7 @@
         // Initial calls when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             renderPortfolio();
-            updateAdminUI();
+            updateAdminUI(); // Initial check for login state and update UI
         });
 
 
@@ -491,14 +563,23 @@
             mobileMenu.classList.toggle('hidden');
         });
 
-        // Close mobile menu when clicking outside (optional, but good for UX)
+        // Close mobile menu and admin panel when clicking outside (improved for UX)
         document.addEventListener('click', function(event) {
             const isClickInsideMobileMenu = mobileMenu.contains(event.target);
             const isClickOnMobileMenuButton = mobileMenuButton.contains(event.target);
             const isClickInsideAdminPanel = adminPanel.contains(event.target);
+            const isClickOnAdminToggleButton = adminToggleButton.contains(event.target) || mobileAdminToggleButton.contains(event.target);
 
-            if (!isClickInsideMobileMenu && !isClickOnMobileMenuButton && !isClickInsideAdminPanel && !mobileMenu.classList.contains('hidden')) {
+
+            // Close mobile menu if open and click is outside it and its toggle button
+            if (!mobileMenu.classList.contains('hidden') && !isClickInsideMobileMenu && !isClickOnMobileMenuButton) {
                 mobileMenu.classList.add('hidden');
+            }
+
+            // Hide admin panel if not logged in and click is outside admin panel and its toggle buttons
+            // This prevents the admin panel from just disappearing if you click the header or another nav link
+            if (!isLoggedIn && !adminPanel.classList.contains('hidden') && !isClickInsideAdminPanel && !isClickOnAdminToggleButton) {
+                 adminPanel.classList.add('hidden');
             }
         });
 
